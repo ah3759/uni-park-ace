@@ -4,6 +4,7 @@ import Services from "@/components/Services";
 import TrackingSystem from "@/components/TrackingSystem";
 import TimeGuarantee from "@/components/TimeGuarantee";
 import Pricing from "@/components/Pricing";
+import ParkingForm from "@/components/ParkingForm";
 import Partnerships from "@/components/Partnerships";
 import Footer from "@/components/Footer";
 
@@ -16,6 +17,7 @@ const Index = () => {
       <TrackingSystem />
       <TimeGuarantee />
       <Pricing />
+      <ParkingForm />
       <Partnerships />
       <Footer />
     </div>
