@@ -7,7 +7,8 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "@/components/ui/use-toast";
-import { Car, User, Phone, Mail, Clock } from "lucide-react";
+import { Car, User, Phone, Mail, Clock, MapPin } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { z } from "zod";
 
 const parkingFormSchema = z.object({
@@ -19,6 +20,7 @@ const parkingFormSchema = z.object({
   vehicleModel: z.string().trim().min(1, "Vehicle model is required").max(50, "Vehicle model must be less than 50 characters"),
   vehicleColor: z.string().trim().min(1, "Vehicle color is required").max(30, "Vehicle color must be less than 30 characters"),
   licensePlate: z.string().trim().min(1, "License plate is required").max(15, "License plate must be less than 15 characters"),
+  pickupLocation: z.string().min(1, "Pickup location is required"),
   serviceType: z.enum(["single", "monthly", "semester"]),
   specialInstructions: z.string().max(500, "Special instructions must be less than 500 characters").optional(),
   agreeToTerms: z.boolean().refine(val => val === true, "You must agree to the terms"),
@@ -222,6 +224,35 @@ const ParkingForm = () => {
                     />
                     {errors.licensePlate && <p className="text-sm text-destructive">{errors.licensePlate}</p>}
                   </div>
+                </div>
+              </div>
+
+              {/* Pickup Location */}
+              <div className="space-y-4">
+                <div className="flex items-center gap-2 text-sm font-medium text-foreground">
+                  <MapPin className="w-4 h-4 text-secondary" />
+                  Pickup Location
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="pickupLocation">Select Location *</Label>
+                  <Select
+                    value={formData.pickupLocation || ""}
+                    onValueChange={(value) => handleInputChange("pickupLocation", value)}
+                  >
+                    <SelectTrigger className={errors.pickupLocation ? "border-destructive" : ""}>
+                      <SelectValue placeholder="Choose a pickup location" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="gleason-circle">Gleason Circle Bus Stop</SelectItem>
+                      <SelectItem value="sentinel">Sentinel</SelectItem>
+                      <SelectItem value="ntid">NTID Bus Stop</SelectItem>
+                      <SelectItem value="north-bus-shelter">North Bus Shelter</SelectItem>
+                      <SelectItem value="slaughter-hall">Slaughter Hall Bus Stop</SelectItem>
+                      <SelectItem value="kimball-loop">Kimball Loop</SelectItem>
+                      <SelectItem value="global-village">Global Village Bus Stop</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  {errors.pickupLocation && <p className="text-sm text-destructive">{errors.pickupLocation}</p>}
                 </div>
               </div>
 
