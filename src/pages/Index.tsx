@@ -1,7 +1,7 @@
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import Services from "@/components/Services";
-import TrackingSystem from "@/components/TrackingSystem";
+
 import TimeGuarantee from "@/components/TimeGuarantee";
 import Pricing from "@/components/Pricing";
 import ParkingForm from "@/components/ParkingForm";
@@ -15,7 +15,7 @@ const Index = () => {
       <Hero />
       <ParkingForm />
       <Services />
-      <TrackingSystem />
+      
       <TimeGuarantee />
       <Pricing />
       <Partnerships />
