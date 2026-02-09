@@ -45,7 +45,7 @@ const Hero = () => {
               Start Parking Smarter
               <ArrowRight className="w-5 h-5" />
             </Button>
-            <Button variant="heroOutline" size="xl">
+            <Button variant="heroOutline" size="xl" onClick={() => document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' })}>
               View Campus Plans
             </Button>
           </div>
