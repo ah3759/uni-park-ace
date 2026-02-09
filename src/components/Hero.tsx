@@ -41,7 +41,7 @@ const Hero = () => {
 
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16 animate-slide-up" style={{ animationDelay: "0.4s" }}>
-            <Button variant="hero" size="xl">
+            <Button variant="hero" size="xl" onClick={() => document.getElementById('parking-form')?.scrollIntoView({ behavior: 'smooth' })}>
               Start Parking Smarter
               <ArrowRight className="w-5 h-5" />
             </Button>
