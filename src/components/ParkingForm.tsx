@@ -10,6 +10,7 @@ import { toast } from "@/components/ui/use-toast";
 import { Car, User, Phone, Mail, Clock, MapPin } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { z } from "zod";
+import { supabase } from "@/integrations/supabase/client";
 
 const parkingFormSchema = z.object({
   firstName: z.string().trim().min(1, "First name is required").max(50, "First name must be less than 50 characters"),
@@ -50,14 +51,28 @@ const ParkingForm = () => {
 
     try {
       const validatedData = parkingFormSchema.parse(formData);
-      console.log("Form submitted:", validatedData);
-      
+
+      const { error: dbError } = await supabase.from("parking_requests").insert({
+        first_name: validatedData.firstName,
+        last_name: validatedData.lastName,
+        email: validatedData.email,
+        phone: validatedData.phone,
+        vehicle_make: validatedData.vehicleMake,
+        vehicle_model: validatedData.vehicleModel,
+        vehicle_color: validatedData.vehicleColor,
+        license_plate: validatedData.licensePlate,
+        pickup_location: validatedData.pickupLocation,
+        service_type: validatedData.serviceType,
+        special_instructions: validatedData.specialInstructions || null,
+      });
+
+      if (dbError) throw dbError;
+
       toast({
         title: "Parking Request Submitted!",
         description: "We'll send you a confirmation email shortly.",
       });
 
-      // Reset form
       setFormData({
         serviceType: "single",
         agreeToTerms: false,
