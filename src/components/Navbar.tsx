@@ -44,7 +44,7 @@ const Navbar = () => {
           {/* CTA Buttons */}
           <div className="hidden md:flex items-center gap-3">
             <Button variant="ghost" size="sm" onClick={() => navigate("/login")}>
-              Sign In
+              Customer Sign In
             </Button>
             <Button variant="secondary" size="sm" onClick={() => document.getElementById("parking-form")?.scrollIntoView({ behavior: "smooth" })}>
               Get Started
@@ -76,7 +76,7 @@ const Navbar = () => {
               ))}
               <div className="flex flex-col gap-2 pt-4 border-t border-border/50">
                 <Button variant="ghost" size="sm" onClick={() => { navigate("/login"); setIsOpen(false); }}>
-                  Sign In
+                  Customer Sign In
                 </Button>
                 <Button variant="secondary" size="sm" onClick={() => { document.getElementById("parking-form")?.scrollIntoView({ behavior: "smooth" }); setIsOpen(false); }}>
                   Get Started
