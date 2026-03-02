@@ -10,7 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/components/ui/use-toast";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { LogOut, Car, Search, Clock, CheckCircle, XCircle, PlayCircle, AlertCircle, MessageSquare, RefreshCw } from "lucide-react";
+import { LogOut, Car, Search, Clock, CheckCircle, XCircle, PlayCircle, AlertCircle, MessageSquare, RefreshCw, Shield } from "lucide-react";
 
 type RequestStatus = "pending" | "confirmed" | "in_progress" | "completed" | "cancelled";
 
@@ -59,7 +59,7 @@ const locationLabels: Record<string, string> = {
 };
 
 const Dashboard = () => {
-  const { user, loading: authLoading, isEmployee, signOut } = useAuth();
+  const { user, loading: authLoading, isEmployee, isAdmin, signOut } = useAuth();
   const navigate = useNavigate();
   const [requests, setRequests] = useState<ParkingRequest[]>([]);
   const [loading, setLoading] = useState(true);
@@ -189,6 +189,11 @@ const Dashboard = () => {
           </div>
           <div className="flex items-center gap-3">
             <span className="text-sm text-muted-foreground">{user?.email}</span>
+            {isAdmin && (
+              <Button variant="outline" size="sm" onClick={() => navigate("/admin")}>
+                <Shield className="w-4 h-4 mr-1" /> Admin
+              </Button>
+            )}
             <Button variant="outline" size="sm" onClick={() => { signOut(); navigate("/"); }}>
               <LogOut className="w-4 h-4 mr-1" /> Sign Out
             </Button>
