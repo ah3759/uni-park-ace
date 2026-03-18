@@ -7,6 +7,7 @@ import { AuthProvider } from "@/hooks/useAuth";
 import Index from "./pages/Index";
 import Login from "./pages/Login";
 import CustomerLogin from "./pages/CustomerLogin";
+import CustomerDashboard from "./pages/CustomerDashboard";
 import Dashboard from "./pages/Dashboard";
 import Admin from "./pages/Admin";
 import NotFound from "./pages/NotFound";
@@ -24,6 +25,7 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/login" element={<Login />} />
             <Route path="/customer-login" element={<CustomerLogin />} />
+            <Route path="/customer-dashboard" element={<CustomerDashboard />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/admin" element={<Admin />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

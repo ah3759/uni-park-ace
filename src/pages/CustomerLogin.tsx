@@ -29,7 +29,7 @@ const CustomerLogin = () => {
         toast({ title: "Account created! Signing you in..." });
         const { error: signInError } = await signIn(email, password);
         if (!signInError) {
-          navigate("/");
+          navigate("/customer-dashboard");
         }
       }
     } else {
@@ -38,7 +38,7 @@ const CustomerLogin = () => {
         toast({ title: "Login failed", description: error.message, variant: "destructive" });
       } else {
         toast({ title: "Welcome back!" });
-        navigate("/");
+        navigate("/customer-dashboard");
       }
     }
     setLoading(false);
