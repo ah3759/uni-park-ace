@@ -75,7 +75,7 @@ const Navbar = () => {
                 </a>
               ))}
               <div className="flex flex-col gap-2 pt-4 border-t border-border/50">
-                <Button variant="ghost" size="sm" onClick={() => { navigate("/login"); setIsOpen(false); }}>
+                <Button variant="ghost" size="sm" onClick={() => { navigate("/customer-login"); setIsOpen(false); }}>
                   Customer Sign In
                 </Button>
                 <Button variant="secondary" size="sm" onClick={() => { document.getElementById("parking-form")?.scrollIntoView({ behavior: "smooth" }); setIsOpen(false); }}>

@@ -53,10 +53,10 @@ const Login = () => {
             <Shield className="w-6 h-6 text-secondary" />
           </div>
           <CardTitle className="font-display text-2xl">
-            {isSignUp ? "Create Account" : "Employee Login"}
+            {isSignUp ? "Create Employee Account" : "Employee Sign In"}
           </CardTitle>
           <CardDescription>
-            {isSignUp ? "Sign up to access the management dashboard" : "Sign in to access the management dashboard"}
+            {isSignUp ? "Sign up to access the management dashboard" : "Employees only — sign in to access the management dashboard"}
           </CardDescription>
         </CardHeader>
         <CardContent>
