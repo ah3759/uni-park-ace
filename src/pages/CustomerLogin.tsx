@@ -6,9 +6,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "@/components/ui/use-toast";
-import { LogIn, Shield, UserPlus } from "lucide-react";
+import { LogIn, UserPlus, Car } from "lucide-react";
 
-const Login = () => {
+const CustomerLogin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [displayName, setDisplayName] = useState("");
@@ -27,10 +27,9 @@ const Login = () => {
         toast({ title: "Sign up failed", description: error.message, variant: "destructive" });
       } else {
         toast({ title: "Account created! Signing you in..." });
-        // Auto-confirm is enabled, so sign in immediately
         const { error: signInError } = await signIn(email, password);
         if (!signInError) {
-          navigate("/dashboard");
+          navigate("/");
         }
       }
     } else {
@@ -39,7 +38,7 @@ const Login = () => {
         toast({ title: "Login failed", description: error.message, variant: "destructive" });
       } else {
         toast({ title: "Welcome back!" });
-        navigate("/dashboard");
+        navigate("/");
       }
     }
     setLoading(false);
@@ -50,20 +49,22 @@ const Login = () => {
       <Card className="w-full max-w-md glass-card border-border/50">
         <CardHeader className="text-center">
           <div className="mx-auto mb-4 w-12 h-12 rounded-full bg-secondary/10 flex items-center justify-center">
-            <Shield className="w-6 h-6 text-secondary" />
+            <Car className="w-6 h-6 text-secondary" />
           </div>
           <CardTitle className="font-display text-2xl">
-            {isSignUp ? "Create Employee Account" : "Employee Sign In"}
+            {isSignUp ? "Create Account" : "Customer Sign In"}
           </CardTitle>
           <CardDescription>
-            {isSignUp ? "Sign up to access the management dashboard" : "Employees only — sign in to access the management dashboard"}
+            {isSignUp
+              ? "Sign up to view your parking history and subscriptions"
+              : "Sign in to view your parking history, transactions, and subscriptions"}
           </CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
             {isSignUp && (
               <div className="space-y-2">
-                <Label htmlFor="displayName">Display Name</Label>
+                <Label htmlFor="displayName">Full Name</Label>
                 <Input
                   id="displayName"
                   type="text"
@@ -79,7 +80,7 @@ const Login = () => {
               <Input
                 id="email"
                 type="email"
-                placeholder="employee@company.com"
+                placeholder="you@example.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
@@ -120,4 +121,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default CustomerLogin;
