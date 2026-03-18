@@ -29,7 +29,7 @@ const CustomerLogin = () => {
         toast({ title: "Account created! Signing you in..." });
         const { error: signInError } = await signIn(email, password);
         if (!signInError) {
-          navigate("/");
+          navigate("/customer-dashboard");
         }
       }
     } else {
