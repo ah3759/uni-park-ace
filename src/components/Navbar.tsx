@@ -43,7 +43,7 @@ const Navbar = () => {
 
           {/* CTA Buttons */}
           <div className="hidden md:flex items-center gap-3">
-            <Button variant="ghost" size="sm" onClick={() => navigate("/login")}>
+            <Button variant="ghost" size="sm" onClick={() => navigate("/customer-login")}>
               Customer Sign In
             </Button>
             <Button variant="secondary" size="sm" onClick={() => document.getElementById("parking-form")?.scrollIntoView({ behavior: "smooth" })}>
