@@ -1,4 +1,5 @@
 import { Car, Mail, Phone, MapPin, Instagram, Twitter, Linkedin } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const Footer = () => {
   const links = {
@@ -74,9 +75,15 @@ const Footer = () => {
             <ul className="space-y-3">
               {links.company.map((link) => (
                 <li key={link.name}>
-                  <a href={link.href} className="text-primary-foreground/60 hover:text-primary-foreground transition-colors">
-                    {link.name}
-                  </a>
+                  {link.href.startsWith("/") ? (
+                    <Link to={link.href} className="text-primary-foreground/60 hover:text-primary-foreground transition-colors">
+                      {link.name}
+                    </Link>
+                  ) : (
+                    <a href={link.href} className="text-primary-foreground/60 hover:text-primary-foreground transition-colors">
+                      {link.name}
+                    </a>
+                  )}
                 </li>
               ))}
             </ul>
