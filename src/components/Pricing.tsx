@@ -129,6 +129,7 @@ const Pricing = () => {
                 variant={plan.popular ? "hero" : "secondary"}
                 size="lg"
                 className="w-full"
+                onClick={() => navigate(`/checkout?plan=${plan.id}`)}
               >
                 {plan.cta}
               </Button>
