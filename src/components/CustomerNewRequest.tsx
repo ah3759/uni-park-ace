@@ -68,7 +68,7 @@ const CustomerNewRequest = ({ userEmail, onSuccess }: CustomerNewRequestProps) =
       toast({ title: "Request submitted!", description: "Your valet request has been placed." });
       setForm({
         first_name: "", last_name: "", phone: "",
-        vehicle_make: "", vehicle_model: "", vehicle_color: "",
+        vehicle_make: "", vehicle_model: "", vehicle_year: "", vehicle_color: "",
         license_plate: "", pickup_location: "", service_type: "single",
         special_instructions: "",
       });
