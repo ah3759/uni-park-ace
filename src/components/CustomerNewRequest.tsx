@@ -38,7 +38,7 @@ const CustomerNewRequest = ({ userEmail, onSuccess }: CustomerNewRequestProps) =
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const required = ["first_name", "last_name", "phone", "vehicle_make", "vehicle_model", "vehicle_color", "license_plate", "pickup_location"];
+    const required = ["first_name", "last_name", "phone", "vehicle_make", "vehicle_model", "vehicle_year", "vehicle_color", "license_plate", "pickup_location"];
     const missing = required.filter((k) => !form[k as keyof typeof form]);
     if (missing.length) {
       toast({ title: "Please fill in all required fields", variant: "destructive" });
