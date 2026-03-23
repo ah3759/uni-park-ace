@@ -191,30 +191,18 @@ const ParkingForm = () => {
                   Vehicle Information
                 </div>
                 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="vehicleMake">Make *</Label>
-                    <Input
-                      id="vehicleMake"
-                      placeholder="Toyota"
-                      value={formData.vehicleMake || ""}
-                      onChange={(e) => handleInputChange("vehicleMake", e.target.value)}
-                      className={errors.vehicleMake ? "border-destructive" : ""}
-                    />
-                    {errors.vehicleMake && <p className="text-sm text-destructive">{errors.vehicleMake}</p>}
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <Label htmlFor="vehicleModel">Model *</Label>
-                    <Input
-                      id="vehicleModel"
-                      placeholder="Camry"
-                      value={formData.vehicleModel || ""}
-                      onChange={(e) => handleInputChange("vehicleModel", e.target.value)}
-                      className={errors.vehicleModel ? "border-destructive" : ""}
-                    />
-                    {errors.vehicleModel && <p className="text-sm text-destructive">{errors.vehicleModel}</p>}
-                  </div>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <VehicleSelector
+                    make={formData.vehicleMake || ""}
+                    model={formData.vehicleModel || ""}
+                    year={formData.vehicleYear || ""}
+                    onMakeChange={(v) => handleInputChange("vehicleMake", v)}
+                    onModelChange={(v) => handleInputChange("vehicleModel", v)}
+                    onYearChange={(v) => handleInputChange("vehicleYear", v)}
+                    makeError={errors.vehicleMake}
+                    modelError={errors.vehicleModel}
+                    yearError={errors.vehicleYear}
+                  />
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
