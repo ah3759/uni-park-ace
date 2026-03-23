@@ -10,6 +10,7 @@ import CustomerLogin from "./pages/CustomerLogin";
 import CustomerDashboard from "./pages/CustomerDashboard";
 import Dashboard from "./pages/Dashboard";
 import Admin from "./pages/Admin";
+import Checkout from "./pages/Checkout";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
