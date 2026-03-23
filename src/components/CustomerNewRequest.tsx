@@ -8,6 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { toast } from "@/components/ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { Car, Plus } from "lucide-react";
+import VehicleSelector from "@/components/VehicleSelector";
 
 interface CustomerNewRequestProps {
   userEmail: string;
@@ -22,6 +23,7 @@ const CustomerNewRequest = ({ userEmail, onSuccess }: CustomerNewRequestProps) =
     phone: "",
     vehicle_make: "",
     vehicle_model: "",
+    vehicle_year: "",
     vehicle_color: "",
     license_plate: "",
     pickup_location: "",
@@ -36,7 +38,7 @@ const CustomerNewRequest = ({ userEmail, onSuccess }: CustomerNewRequestProps) =
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const required = ["first_name", "last_name", "phone", "vehicle_make", "vehicle_model", "vehicle_color", "license_plate", "pickup_location"];
+    const required = ["first_name", "last_name", "phone", "vehicle_make", "vehicle_model", "vehicle_year", "vehicle_color", "license_plate", "pickup_location"];
     const missing = required.filter((k) => !form[k as keyof typeof form]);
     if (missing.length) {
       toast({ title: "Please fill in all required fields", variant: "destructive" });
@@ -66,7 +68,7 @@ const CustomerNewRequest = ({ userEmail, onSuccess }: CustomerNewRequestProps) =
       toast({ title: "Request submitted!", description: "Your valet request has been placed." });
       setForm({
         first_name: "", last_name: "", phone: "",
-        vehicle_make: "", vehicle_model: "", vehicle_color: "",
+        vehicle_make: "", vehicle_model: "", vehicle_year: "", vehicle_color: "",
         license_plate: "", pickup_location: "", service_type: "single",
         special_instructions: "",
       });
@@ -104,18 +106,19 @@ const CustomerNewRequest = ({ userEmail, onSuccess }: CustomerNewRequestProps) =
             </div>
           </div>
 
-          {/* Vehicle Info */}
           <div>
             <h4 className="text-sm font-medium text-foreground mb-3">Vehicle Information</h4>
-            <div className="grid sm:grid-cols-2 gap-4">
-              <div className="space-y-1.5">
-                <Label htmlFor="cr-make">Make *</Label>
-                <Input id="cr-make" value={form.vehicle_make} onChange={(e) => update("vehicle_make", e.target.value)} placeholder="e.g. Toyota" />
-              </div>
-              <div className="space-y-1.5">
-                <Label htmlFor="cr-model">Model *</Label>
-                <Input id="cr-model" value={form.vehicle_model} onChange={(e) => update("vehicle_model", e.target.value)} placeholder="e.g. Camry" />
-              </div>
+            <div className="grid sm:grid-cols-3 gap-4">
+              <VehicleSelector
+                make={form.vehicle_make}
+                model={form.vehicle_model}
+                year={form.vehicle_year}
+                onMakeChange={(v) => update("vehicle_make", v)}
+                onModelChange={(v) => update("vehicle_model", v)}
+                onYearChange={(v) => update("vehicle_year", v)}
+              />
+            </div>
+            <div className="grid sm:grid-cols-2 gap-4 mt-4">
               <div className="space-y-1.5">
                 <Label htmlFor="cr-color">Color *</Label>
                 <Input id="cr-color" value={form.vehicle_color} onChange={(e) => update("vehicle_color", e.target.value)} placeholder="e.g. White" />

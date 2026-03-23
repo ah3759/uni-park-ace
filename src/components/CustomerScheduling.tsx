@@ -12,6 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "@/components/ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import VehicleSelector from "@/components/VehicleSelector";
 
 const timeSlots = [
   "07:00", "07:30", "08:00", "08:30", "09:00", "09:30",
@@ -30,6 +31,7 @@ const CustomerScheduling = () => {
     customer_phone: "",
     vehicle_make: "",
     vehicle_model: "",
+    vehicle_year: "",
     vehicle_color: "",
     license_plate: "",
     pickup_location: "",
@@ -45,7 +47,7 @@ const CustomerScheduling = () => {
 
     const required = [
       "customer_name", "customer_email", "customer_phone",
-      "vehicle_make", "vehicle_model", "vehicle_color",
+      "vehicle_make", "vehicle_model", "vehicle_year", "vehicle_color",
       "license_plate", "pickup_location", "scheduled_time",
     ];
     const missing = required.filter((k) => !form[k as keyof typeof form]);
@@ -76,7 +78,7 @@ const CustomerScheduling = () => {
       toast({ title: "Valet Scheduled!", description: `Your pickup is set for ${format(date, "PPP")} at ${form.scheduled_time}.` });
       setForm({
         customer_name: "", customer_email: "", customer_phone: "",
-        vehicle_make: "", vehicle_model: "", vehicle_color: "",
+        vehicle_make: "", vehicle_model: "", vehicle_year: "", vehicle_color: "",
         license_plate: "", pickup_location: "", scheduled_time: "",
         special_instructions: "",
       });
@@ -180,15 +182,17 @@ const CustomerScheduling = () => {
               {/* Vehicle Info */}
               <div>
                 <h4 className="text-sm font-medium text-foreground mb-3">Vehicle Information</h4>
-                <div className="grid sm:grid-cols-2 gap-4">
-                  <div className="space-y-1.5">
-                    <Label>Make *</Label>
-                    <Input value={form.vehicle_make} onChange={(e) => update("vehicle_make", e.target.value)} placeholder="e.g. Toyota" />
-                  </div>
-                  <div className="space-y-1.5">
-                    <Label>Model *</Label>
-                    <Input value={form.vehicle_model} onChange={(e) => update("vehicle_model", e.target.value)} placeholder="e.g. Camry" />
-                  </div>
+                <div className="grid sm:grid-cols-3 gap-4">
+                  <VehicleSelector
+                    make={form.vehicle_make}
+                    model={form.vehicle_model}
+                    year={form.vehicle_year}
+                    onMakeChange={(v) => update("vehicle_make", v)}
+                    onModelChange={(v) => update("vehicle_model", v)}
+                    onYearChange={(v) => update("vehicle_year", v)}
+                  />
+                </div>
+                <div className="grid sm:grid-cols-2 gap-4 mt-4">
                   <div className="space-y-1.5">
                     <Label>Color *</Label>
                     <Input value={form.vehicle_color} onChange={(e) => update("vehicle_color", e.target.value)} placeholder="e.g. White" />

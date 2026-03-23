@@ -8,6 +8,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "@/components/ui/use-toast";
 import { Car, User, Phone, Mail, Clock, MapPin } from "lucide-react";
+import VehicleSelector from "@/components/VehicleSelector";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { z } from "zod";
 import { supabase } from "@/integrations/supabase/client";
@@ -17,8 +18,9 @@ const parkingFormSchema = z.object({
   lastName: z.string().trim().min(1, "Last name is required").max(50, "Last name must be less than 50 characters"),
   email: z.string().trim().email("Invalid email address").max(255, "Email must be less than 255 characters"),
   phone: z.string().trim().min(10, "Phone number must be at least 10 digits").max(20, "Phone number must be less than 20 characters"),
-  vehicleMake: z.string().trim().min(1, "Vehicle make is required").max(50, "Vehicle make must be less than 50 characters"),
-  vehicleModel: z.string().trim().min(1, "Vehicle model is required").max(50, "Vehicle model must be less than 50 characters"),
+  vehicleMake: z.string().trim().min(1, "Vehicle make is required"),
+  vehicleModel: z.string().trim().min(1, "Vehicle model is required"),
+  vehicleYear: z.string().trim().min(1, "Vehicle year is required"),
   vehicleColor: z.string().trim().min(1, "Vehicle color is required").max(30, "Vehicle color must be less than 30 characters"),
   licensePlate: z.string().trim().min(1, "License plate is required").max(15, "License plate must be less than 15 characters"),
   pickupLocation: z.string().min(1, "Pickup location is required"),
@@ -189,30 +191,18 @@ const ParkingForm = () => {
                   Vehicle Information
                 </div>
                 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="vehicleMake">Make *</Label>
-                    <Input
-                      id="vehicleMake"
-                      placeholder="Toyota"
-                      value={formData.vehicleMake || ""}
-                      onChange={(e) => handleInputChange("vehicleMake", e.target.value)}
-                      className={errors.vehicleMake ? "border-destructive" : ""}
-                    />
-                    {errors.vehicleMake && <p className="text-sm text-destructive">{errors.vehicleMake}</p>}
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <Label htmlFor="vehicleModel">Model *</Label>
-                    <Input
-                      id="vehicleModel"
-                      placeholder="Camry"
-                      value={formData.vehicleModel || ""}
-                      onChange={(e) => handleInputChange("vehicleModel", e.target.value)}
-                      className={errors.vehicleModel ? "border-destructive" : ""}
-                    />
-                    {errors.vehicleModel && <p className="text-sm text-destructive">{errors.vehicleModel}</p>}
-                  </div>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <VehicleSelector
+                    make={formData.vehicleMake || ""}
+                    model={formData.vehicleModel || ""}
+                    year={formData.vehicleYear || ""}
+                    onMakeChange={(v) => handleInputChange("vehicleMake", v)}
+                    onModelChange={(v) => handleInputChange("vehicleModel", v)}
+                    onYearChange={(v) => handleInputChange("vehicleYear", v)}
+                    makeError={errors.vehicleMake}
+                    modelError={errors.vehicleModel}
+                    yearError={errors.vehicleYear}
+                  />
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
