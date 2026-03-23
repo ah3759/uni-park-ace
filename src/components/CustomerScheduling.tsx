@@ -36,6 +36,7 @@ const CustomerScheduling = () => {
     customer_phone: "",
     vehicle_make: "",
     vehicle_model: "",
+    vehicle_year: "",
     vehicle_color: "",
     license_plate: "",
     pickup_location: "",
