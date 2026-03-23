@@ -46,11 +46,11 @@ const Partnerships = () => {
             </div>
 
             <div className="flex flex-col sm:flex-row gap-4">
-              <Button variant="secondary" size="lg">
+              <Button variant="secondary" size="lg" onClick={() => document.getElementById('business-booking')?.scrollIntoView({ behavior: 'smooth' })}>
                 Become a Partner
               </Button>
-              <Button variant="outline" size="lg">
-                Download Event Brochure
+              <Button variant="outline" size="lg" onClick={() => document.getElementById('business-booking')?.scrollIntoView({ behavior: 'smooth' })}>
+                Request Event Info
               </Button>
             </div>
           </div>

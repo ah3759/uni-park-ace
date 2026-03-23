@@ -42,11 +42,11 @@ const Hero = () => {
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16 animate-slide-up" style={{ animationDelay: "0.4s" }}>
             <Button variant="hero" size="xl" onClick={() => document.getElementById('parking-form')?.scrollIntoView({ behavior: 'smooth' })}>
-              Start Parking Smarter
+              Start Parking Smarter Now
               <ArrowRight className="w-5 h-5" />
             </Button>
-            <Button variant="heroOutline" size="xl" onClick={() => document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' })}>
-              View Campus Plans
+            <Button variant="heroOutline" size="xl" onClick={() => document.getElementById('schedule')?.scrollIntoView({ behavior: 'smooth' })}>
+              Schedule a Pickup
             </Button>
           </div>
 
