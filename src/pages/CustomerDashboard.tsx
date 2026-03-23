@@ -6,7 +6,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Car, Clock, CreditCard, Crown, LogOut, History, Package } from "lucide-react";
+import { Car, Clock, CreditCard, Crown, LogOut, History, Package, Plus } from "lucide-react";
+import CustomerNewRequest from "@/components/CustomerNewRequest";
 
 interface ParkingRequest {
   id: string;
@@ -147,11 +148,17 @@ const CustomerDashboard = () => {
 
         {/* Tabs */}
         <Tabs defaultValue="active" className="space-y-4">
-          <TabsList className="grid w-full grid-cols-3">
+          <TabsList className="grid w-full grid-cols-4">
             <TabsTrigger value="active">Active</TabsTrigger>
+            <TabsTrigger value="new">New Request</TabsTrigger>
             <TabsTrigger value="history">History</TabsTrigger>
             <TabsTrigger value="subscription">Subscription</TabsTrigger>
           </TabsList>
+
+          {/* New Request */}
+          <TabsContent value="new">
+            <CustomerNewRequest userEmail={user?.email ?? ""} onSuccess={fetchRequests} />
+          </TabsContent>
 
           {/* Active Requests */}
           <TabsContent value="active" className="space-y-4">
