@@ -52,7 +52,7 @@ const CustomerScheduling = () => {
 
     const required = [
       "customer_name", "customer_email", "customer_phone",
-      "vehicle_make", "vehicle_model", "vehicle_color",
+      "vehicle_make", "vehicle_model", "vehicle_year", "vehicle_color",
       "license_plate", "pickup_location", "scheduled_time",
     ];
     const missing = required.filter((k) => !form[k as keyof typeof form]);
