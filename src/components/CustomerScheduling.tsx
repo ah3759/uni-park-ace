@@ -213,11 +213,13 @@ const CustomerScheduling = () => {
                 <Select value={form.pickup_location} onValueChange={(v) => update("pickup_location", v)}>
                   <SelectTrigger><SelectValue placeholder="Select location" /></SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="main_entrance">Main Entrance</SelectItem>
-                    <SelectItem value="north_gate">North Gate</SelectItem>
-                    <SelectItem value="south_parking">South Parking</SelectItem>
-                    <SelectItem value="east_wing">East Wing</SelectItem>
-                    <SelectItem value="west_plaza">West Plaza</SelectItem>
+                    <SelectItem value="gleason-circle">Gleason Circle Bus Stop</SelectItem>
+                    <SelectItem value="sentinel">Sentinel</SelectItem>
+                    <SelectItem value="ntid">NTID Bus Stop</SelectItem>
+                    <SelectItem value="north-bus-shelter">North Bus Shelter</SelectItem>
+                    <SelectItem value="slaughter-hall">Slaughter Hall Bus Stop</SelectItem>
+                    <SelectItem value="kimball-loop">Kimball Loop</SelectItem>
+                    <SelectItem value="global-village">Global Village Bus Stop</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
