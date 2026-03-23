@@ -83,7 +83,7 @@ const CustomerScheduling = () => {
       toast({ title: "Valet Scheduled!", description: `Your pickup is set for ${format(date, "PPP")} at ${form.scheduled_time}.` });
       setForm({
         customer_name: "", customer_email: "", customer_phone: "",
-        vehicle_make: "", vehicle_model: "", vehicle_color: "",
+        vehicle_make: "", vehicle_model: "", vehicle_year: "", vehicle_color: "",
         license_plate: "", pickup_location: "", scheduled_time: "",
         special_instructions: "",
       });
