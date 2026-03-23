@@ -8,6 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { toast } from "@/components/ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { Car, Plus } from "lucide-react";
+import VehicleSelector from "@/components/VehicleSelector";
 
 interface CustomerNewRequestProps {
   userEmail: string;

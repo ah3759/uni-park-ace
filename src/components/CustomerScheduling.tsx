@@ -182,15 +182,17 @@ const CustomerScheduling = () => {
               {/* Vehicle Info */}
               <div>
                 <h4 className="text-sm font-medium text-foreground mb-3">Vehicle Information</h4>
-                <div className="grid sm:grid-cols-2 gap-4">
-                  <div className="space-y-1.5">
-                    <Label>Make *</Label>
-                    <Input value={form.vehicle_make} onChange={(e) => update("vehicle_make", e.target.value)} placeholder="e.g. Toyota" />
-                  </div>
-                  <div className="space-y-1.5">
-                    <Label>Model *</Label>
-                    <Input value={form.vehicle_model} onChange={(e) => update("vehicle_model", e.target.value)} placeholder="e.g. Camry" />
-                  </div>
+                <div className="grid sm:grid-cols-3 gap-4">
+                  <VehicleSelector
+                    make={form.vehicle_make}
+                    model={form.vehicle_model}
+                    year={form.vehicle_year}
+                    onMakeChange={(v) => update("vehicle_make", v)}
+                    onModelChange={(v) => update("vehicle_model", v)}
+                    onYearChange={(v) => update("vehicle_year", v)}
+                  />
+                </div>
+                <div className="grid sm:grid-cols-2 gap-4 mt-4">
                   <div className="space-y-1.5">
                     <Label>Color *</Label>
                     <Input value={form.vehicle_color} onChange={(e) => update("vehicle_color", e.target.value)} placeholder="e.g. White" />
