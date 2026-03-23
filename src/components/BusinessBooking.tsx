@@ -78,7 +78,9 @@ const BusinessBooking = () => {
       setForm({
         business_name: "", contact_name: "", contact_email: "",
         contact_phone: "", event_type: "", expected_guests: "",
-        venue_location: "", additional_details: "",
+        venue_location: "", vehicle_make: "", vehicle_model: "",
+        vehicle_year: "", vehicle_color: "", license_plate: "",
+        additional_details: "",
       });
       setEventDate(undefined);
       setEventEndDate(undefined);
