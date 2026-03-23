@@ -1,9 +1,13 @@
 import { Check, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
 
 const Pricing = () => {
+  const navigate = useNavigate();
+
   const plans = [
     {
+      id: "pay-per-use",
       name: "Pay-Per-Use",
       price: "$8",
       period: "per valet",
@@ -19,6 +23,7 @@ const Pricing = () => {
       popular: false,
     },
     {
+      id: "monthly-pro",
       name: "Monthly Pro",
       price: "$99",
       period: "per month",
@@ -35,6 +40,7 @@ const Pricing = () => {
       popular: true,
     },
     {
+      id: "semester-pass",
       name: "Semester Pass",
       price: "$399",
       period: "per semester",
@@ -123,6 +129,7 @@ const Pricing = () => {
                 variant={plan.popular ? "hero" : "secondary"}
                 size="lg"
                 className="w-full"
+                onClick={() => navigate(`/checkout?plan=${plan.id}`)}
               >
                 {plan.cta}
               </Button>
