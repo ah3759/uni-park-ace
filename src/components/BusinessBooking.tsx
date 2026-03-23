@@ -233,14 +233,48 @@ const BusinessBooking = () => {
                 </div>
               </div>
 
-              {/* Venue */}
+              {/* Venue / Location */}
               <div className="space-y-1.5">
-                <Label>Venue / Location *</Label>
-                <Input
-                  value={form.venue_location}
-                  onChange={(e) => update("venue_location", e.target.value)}
-                  placeholder="e.g. University Conference Center, Main Campus"
-                />
+                <Label>Pickup / Venue Location *</Label>
+                <Select value={form.venue_location} onValueChange={(v) => update("venue_location", v)}>
+                  <SelectTrigger><SelectValue placeholder="Select location" /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="gleason-circle">Gleason Circle Bus Stop</SelectItem>
+                    <SelectItem value="sentinel">Sentinel</SelectItem>
+                    <SelectItem value="ntid">NTID Bus Stop</SelectItem>
+                    <SelectItem value="north-bus-shelter">North Bus Shelter</SelectItem>
+                    <SelectItem value="slaughter-hall">Slaughter Hall Bus Stop</SelectItem>
+                    <SelectItem value="kimball-loop">Kimball Loop</SelectItem>
+                    <SelectItem value="global-village">Global Village Bus Stop</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* Vehicle Info */}
+              <div>
+                <h4 className="text-sm font-medium text-foreground mb-3 flex items-center gap-2">
+                  Vehicle Information (Optional)
+                </h4>
+                <div className="grid sm:grid-cols-3 gap-4">
+                  <VehicleSelector
+                    make={form.vehicle_make}
+                    model={form.vehicle_model}
+                    year={form.vehicle_year}
+                    onMakeChange={(v) => update("vehicle_make", v)}
+                    onModelChange={(v) => update("vehicle_model", v)}
+                    onYearChange={(v) => update("vehicle_year", v)}
+                  />
+                </div>
+                <div className="grid sm:grid-cols-2 gap-4 mt-4">
+                  <div className="space-y-1.5">
+                    <Label>Color</Label>
+                    <Input value={form.vehicle_color} onChange={(e) => update("vehicle_color", e.target.value)} placeholder="e.g. White" />
+                  </div>
+                  <div className="space-y-1.5">
+                    <Label>License Plate</Label>
+                    <Input value={form.license_plate} onChange={(e) => update("license_plate", e.target.value)} placeholder="e.g. ABC-1234" />
+                  </div>
+                </div>
               </div>
 
               {/* Additional Details */}
