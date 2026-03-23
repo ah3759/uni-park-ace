@@ -12,6 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "@/components/ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import VehicleSelector from "@/components/VehicleSelector";
 
 const BusinessBooking = () => {
   const [eventDate, setEventDate] = useState<Date>();
