@@ -26,6 +26,11 @@ const BusinessBooking = () => {
     event_type: "",
     expected_guests: "",
     venue_location: "",
+    vehicle_make: "",
+    vehicle_model: "",
+    vehicle_year: "",
+    vehicle_color: "",
+    license_plate: "",
     additional_details: "",
   });
 
