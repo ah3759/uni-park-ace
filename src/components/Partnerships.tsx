@@ -46,11 +46,11 @@ const Partnerships = () => {
             </div>
 
             <div className="flex flex-col sm:flex-row gap-4">
-              <Button variant="secondary" size="lg">
+              <Button variant="secondary" size="lg" onClick={() => document.getElementById('business-booking')?.scrollIntoView({ behavior: 'smooth' })}>
                 Become a Partner
               </Button>
-              <Button variant="outline" size="lg">
-                Download Event Brochure
+              <Button variant="outline" size="lg" onClick={() => document.getElementById('business-booking')?.scrollIntoView({ behavior: 'smooth' })}>
+                Request Event Info
               </Button>
             </div>
           </div>
@@ -89,11 +89,11 @@ const Partnerships = () => {
               Get a custom quote for your next event. We handle events of all sizes, from intimate gatherings to stadium-sized celebrations.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <Button variant="hero" size="lg">
+              <Button variant="hero" size="lg" onClick={() => document.getElementById('business-booking')?.scrollIntoView({ behavior: 'smooth' })}>
                 Request Custom Quote
               </Button>
-              <Button variant="heroOutline" size="lg">
-                Call (555) 123-4567
+              <Button variant="heroOutline" size="lg" onClick={() => document.getElementById('business-booking')?.scrollIntoView({ behavior: 'smooth' })}>
+                Book Event Valet
               </Button>
             </div>
           </div>
