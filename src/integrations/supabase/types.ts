@@ -14,6 +14,57 @@ export type Database = {
   }
   public: {
     Tables: {
+      business_inquiries: {
+        Row: {
+          additional_details: string | null
+          business_name: string
+          contact_email: string
+          contact_name: string
+          contact_phone: string
+          created_at: string
+          event_date: string
+          event_end_date: string | null
+          event_type: string
+          expected_guests: number
+          id: string
+          status: string
+          updated_at: string
+          venue_location: string
+        }
+        Insert: {
+          additional_details?: string | null
+          business_name: string
+          contact_email: string
+          contact_name: string
+          contact_phone: string
+          created_at?: string
+          event_date: string
+          event_end_date?: string | null
+          event_type: string
+          expected_guests: number
+          id?: string
+          status?: string
+          updated_at?: string
+          venue_location: string
+        }
+        Update: {
+          additional_details?: string | null
+          business_name?: string
+          contact_email?: string
+          contact_name?: string
+          contact_phone?: string
+          created_at?: string
+          event_date?: string
+          event_end_date?: string | null
+          event_type?: string
+          expected_guests?: number
+          id?: string
+          status?: string
+          updated_at?: string
+          venue_location?: string
+        }
+        Relationships: []
+      }
       parking_requests: {
         Row: {
           assigned_employee_id: string | null
@@ -163,6 +214,60 @@ export type Database = {
           id?: string
           role?: Database["public"]["Enums"]["app_role"]
           user_id?: string
+        }
+        Relationships: []
+      }
+      valet_schedules: {
+        Row: {
+          created_at: string
+          customer_email: string
+          customer_name: string
+          customer_phone: string
+          id: string
+          license_plate: string
+          pickup_location: string
+          scheduled_date: string
+          scheduled_time: string
+          special_instructions: string | null
+          status: string
+          updated_at: string
+          vehicle_color: string
+          vehicle_make: string
+          vehicle_model: string
+        }
+        Insert: {
+          created_at?: string
+          customer_email: string
+          customer_name: string
+          customer_phone: string
+          id?: string
+          license_plate: string
+          pickup_location: string
+          scheduled_date: string
+          scheduled_time: string
+          special_instructions?: string | null
+          status?: string
+          updated_at?: string
+          vehicle_color: string
+          vehicle_make: string
+          vehicle_model: string
+        }
+        Update: {
+          created_at?: string
+          customer_email?: string
+          customer_name?: string
+          customer_phone?: string
+          id?: string
+          license_plate?: string
+          pickup_location?: string
+          scheduled_date?: string
+          scheduled_time?: string
+          special_instructions?: string | null
+          status?: string
+          updated_at?: string
+          vehicle_color?: string
+          vehicle_make?: string
+          vehicle_model?: string
         }
         Relationships: []
       }
