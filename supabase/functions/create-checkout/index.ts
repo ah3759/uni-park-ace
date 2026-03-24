@@ -18,18 +18,7 @@ serve(async (req) => {
     return new Response(null, { headers: corsHeaders });
   }
 
-  const supabaseClient = createClient(
-    Deno.env.get("SUPABASE_URL") ?? "",
-    Deno.env.get("SUPABASE_ANON_KEY") ?? ""
-  );
-
   try {
-    const authHeader = req.headers.get("Authorization")!;
-    const token = authHeader.replace("Bearer ", "");
-    const { data } = await supabaseClient.auth.getUser(token);
-    const user = data.user;
-    if (!user?.email) throw new Error("User not authenticated or email not available");
-
     const { planId } = await req.json();
     const plan = PRICE_MAP[planId];
     if (!plan) throw new Error(`Invalid plan: ${planId}`);
@@ -38,19 +27,35 @@ serve(async (req) => {
       apiVersion: "2025-08-27.basil",
     });
 
-    const customers = await stripe.customers.list({ email: user.email, limit: 1 });
-    let customerId;
-    if (customers.data.length > 0) {
-      customerId = customers.data[0].id;
+    // Check if user is authenticated (optional)
+    let customerId: string | undefined;
+    let customerEmail: string | undefined;
+    const authHeader = req.headers.get("Authorization");
+    if (authHeader) {
+      const supabaseClient = createClient(
+        Deno.env.get("SUPABASE_URL") ?? "",
+        Deno.env.get("SUPABASE_ANON_KEY") ?? ""
+      );
+      const token = authHeader.replace("Bearer ", "");
+      const { data } = await supabaseClient.auth.getUser(token);
+      if (data?.user?.email) {
+        customerEmail = data.user.email;
+        const customers = await stripe.customers.list({ email: customerEmail, limit: 1 });
+        if (customers.data.length > 0) {
+          customerId = customers.data[0].id;
+        }
+      }
     }
+
+    const origin = req.headers.get("origin") || "https://univale.lovable.app";
 
     const session = await stripe.checkout.sessions.create({
       customer: customerId,
-      customer_email: customerId ? undefined : user.email,
+      customer_email: customerId ? undefined : customerEmail,
       line_items: [{ price: plan.priceId, quantity: 1 }],
       mode: plan.mode,
-      success_url: `${req.headers.get("origin")}/customer-dashboard?checkout=success`,
-      cancel_url: `${req.headers.get("origin")}/checkout?plan=${planId}`,
+      success_url: `${origin}/customer-dashboard?checkout=success`,
+      cancel_url: `${origin}/checkout?plan=${planId}`,
     });
 
     return new Response(JSON.stringify({ url: session.url }), {
