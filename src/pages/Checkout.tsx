@@ -1,8 +1,11 @@
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Check, ArrowLeft, Lock } from "lucide-react";
+import { Check, ArrowLeft, Lock, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/hooks/useAuth";
+import { supabase } from "@/integrations/supabase/client";
+import { useState } from "react";
 
 const plans = {
   "pay-per-use": {
@@ -52,6 +55,8 @@ const Checkout = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { user, loading: authLoading } = useAuth();
+  const [isLoading, setIsLoading] = useState(false);
   const planId = searchParams.get("plan") as keyof typeof plans;
   const plan = planId ? plans[planId] : null;
 
@@ -71,17 +76,41 @@ const Checkout = () => {
     );
   }
 
-  const handleSubscribe = () => {
-    toast({
-      title: "Coming Soon!",
-      description: "Payment processing will be available shortly. We're finalizing our payment integration.",
-    });
+  const handleSubscribe = async () => {
+    if (!user) {
+      toast({
+        title: "Login Required",
+        description: "Please log in to subscribe to a plan.",
+        variant: "destructive",
+      });
+      navigate("/customer-login");
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      const { data, error } = await supabase.functions.invoke("create-checkout", {
+        body: { planId },
+      });
+
+      if (error) throw error;
+      if (data?.url) {
+        window.open(data.url, "_blank");
+      }
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message || "Failed to create checkout session.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
     <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-12 max-w-4xl">
-        {/* Back Button */}
         <Button
           variant="ghost"
           className="mb-8 gap-2"
@@ -126,18 +155,18 @@ const Checkout = () => {
           <Card className="border-border">
             <CardHeader>
               <CardTitle className="font-display text-xl">Payment</CardTitle>
-              <CardDescription>Secure checkout</CardDescription>
+              <CardDescription>Secure checkout via Stripe</CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
-              <div className="rounded-2xl border border-dashed border-border bg-muted/30 p-8 text-center space-y-4">
+              <div className="rounded-2xl border border-border bg-muted/30 p-8 text-center space-y-4">
                 <div className="w-12 h-12 rounded-full bg-secondary/10 flex items-center justify-center mx-auto">
                   <Lock className="w-6 h-6 text-secondary" />
                 </div>
                 <h3 className="font-display text-lg font-semibold text-foreground">
-                  Payment Integration Coming Soon
+                  Secure Stripe Checkout
                 </h3>
                 <p className="text-sm text-muted-foreground max-w-xs mx-auto">
-                  We're setting up secure payment processing. You'll be able to subscribe and manage your plan here shortly.
+                  You'll be redirected to Stripe's secure checkout to complete your payment.
                 </p>
               </div>
 
@@ -146,8 +175,16 @@ const Checkout = () => {
                 size="lg"
                 className="w-full"
                 onClick={handleSubscribe}
+                disabled={isLoading || authLoading}
               >
-                Subscribe — {plan.price} {plan.period}
+                {isLoading ? (
+                  <>
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    Redirecting...
+                  </>
+                ) : (
+                  `Subscribe — ${plan.price} ${plan.period}`
+                )}
               </Button>
 
               <p className="text-xs text-muted-foreground text-center flex items-center justify-center gap-1">
