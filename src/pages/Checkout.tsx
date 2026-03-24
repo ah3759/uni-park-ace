@@ -163,7 +163,7 @@ const Checkout = () => {
                 size="lg"
                 className="w-full"
                 onClick={handleSubscribe}
-                disabled={isLoading || authLoading}
+                disabled={isLoading}
               >
                 {isLoading ? (
                   <>
