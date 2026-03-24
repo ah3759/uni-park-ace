@@ -3,7 +3,6 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Check, ArrowLeft, Lock, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { useState } from "react";
 
@@ -55,7 +54,6 @@ const Checkout = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { user, loading: authLoading } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const planId = searchParams.get("plan") as keyof typeof plans;
   const plan = planId ? plans[planId] : null;
@@ -77,16 +75,6 @@ const Checkout = () => {
   }
 
   const handleSubscribe = async () => {
-    if (!user) {
-      toast({
-        title: "Login Required",
-        description: "Please log in to subscribe to a plan.",
-        variant: "destructive",
-      });
-      navigate("/customer-login");
-      return;
-    }
-
     setIsLoading(true);
     try {
       const { data, error } = await supabase.functions.invoke("create-checkout", {
@@ -175,7 +163,7 @@ const Checkout = () => {
                 size="lg"
                 className="w-full"
                 onClick={handleSubscribe}
-                disabled={isLoading || authLoading}
+                disabled={isLoading}
               >
                 {isLoading ? (
                   <>
