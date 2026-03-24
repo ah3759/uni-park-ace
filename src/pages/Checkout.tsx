@@ -54,7 +54,6 @@ const Checkout = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { user, loading: authLoading } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const planId = searchParams.get("plan") as keyof typeof plans;
   const plan = planId ? plans[planId] : null;
@@ -76,16 +75,6 @@ const Checkout = () => {
   }
 
   const handleSubscribe = async () => {
-    if (!user) {
-      toast({
-        title: "Login Required",
-        description: "Please log in to subscribe to a plan.",
-        variant: "destructive",
-      });
-      navigate("/customer-login");
-      return;
-    }
-
     setIsLoading(true);
     try {
       const { data, error } = await supabase.functions.invoke("create-checkout", {
