@@ -8,6 +8,7 @@ import CustomerScheduling from "@/components/CustomerScheduling";
 import BusinessBooking from "@/components/BusinessBooking";
 import Partnerships from "@/components/Partnerships";
 import Footer from "@/components/Footer";
+import ChatBot from "@/components/ChatBot";
 
 const Index = () => {
   return (
@@ -22,6 +23,7 @@ const Index = () => {
       <BusinessBooking />
       <Partnerships />
       <Footer />
+      <ChatBot />
     </div>
   );
 };
