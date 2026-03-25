@@ -4,7 +4,7 @@ import Services from "@/components/Services";
 import TimeGuarantee from "@/components/TimeGuarantee";
 import Pricing from "@/components/Pricing";
 import ParkingForm from "@/components/ParkingForm";
-import CustomerScheduling from "@/components/CustomerScheduling";
+
 import BusinessBooking from "@/components/BusinessBooking";
 import Partnerships from "@/components/Partnerships";
 import Footer from "@/components/Footer";
