@@ -16,7 +16,7 @@ const Index = () => {
       <Hero />
       <ParkingForm />
       <Services />
-      <CustomerScheduling />
+      
       <TimeGuarantee />
       <Pricing />
       <BusinessBooking />
