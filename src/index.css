@@ -45,7 +45,7 @@
     --shadow-soft: 0 4px 24px -4px hsla(222, 60%, 18%, 0.1);
     --shadow-card: 0 8px 32px -8px hsla(222, 60%, 18%, 0.15);
     --shadow-elevated: 0 16px 48px -12px hsla(222, 60%, 18%, 0.2);
-    --shadow-glow: 0 0 40px -8px hsla(174, 72%, 40%, 0.4);
+    --shadow-glow: 0 0 40px -8px hsla(174, 72%, 32%, 0.4);
 
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 240 5.3% 26.1%;
