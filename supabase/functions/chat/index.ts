@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -9,7 +10,41 @@ serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
   try {
-    const { messages } = await req.json();
+    const { messages, action, email } = await req.json();
+
+    // Handle status lookup action
+    if (action === "check_status" && email) {
+      const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+      const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+      const supabase = createClient(supabaseUrl, supabaseKey);
+
+      const { data: requests, error } = await supabase
+        .from("parking_requests")
+        .select("id, first_name, last_name, vehicle_make, vehicle_model, vehicle_color, license_plate, pickup_location, service_type, status, created_at")
+        .eq("email", email)
+        .order("created_at", { ascending: false })
+        .limit(5);
+
+      const { data: schedules } = await supabase
+        .from("valet_schedules")
+        .select("id, vehicle_make, vehicle_model, vehicle_color, license_plate, pickup_location, scheduled_date, scheduled_time, status, created_at")
+        .eq("customer_email", email)
+        .order("created_at", { ascending: false })
+        .limit(5);
+
+      if (error) {
+        return new Response(JSON.stringify({ error: "Failed to look up requests" }), {
+          status: 500,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+
+      return new Response(JSON.stringify({ requests: requests || [], schedules: schedules || [] }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    // Regular chat flow
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
 
@@ -43,7 +78,9 @@ Website navigation help:
 - To learn about services → scroll to the "Services" section
 - To get started → click "Get Started" button
 
-Keep responses concise, friendly, and helpful. If you don't know something specific, suggest the customer contact support or explore the relevant section of the website.`
+If a customer asks about their request status, tell them to use the "Check My Status" button below the chat to look up their requests by email.
+
+Keep responses concise, friendly, and helpful. Use markdown formatting for better readability. If you don't know something specific, suggest the customer contact support or explore the relevant section of the website.`
           },
           ...messages,
         ],

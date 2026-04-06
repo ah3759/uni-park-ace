@@ -1,9 +1,11 @@
 import { useState, useRef, useEffect } from "react";
-import { MessageCircle, X, Send, Bot, User } from "lucide-react";
+import { MessageCircle, X, Send, Bot, User, Search, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
+import ChatStatusLookup from "@/components/ChatStatusLookup";
+import ChatQuickActions from "@/components/ChatQuickActions";
 
 type Msg = { role: "user" | "assistant"; content: string };
 
@@ -74,11 +76,14 @@ const SUGGESTIONS = [
   "What services do you offer?",
 ];
 
+type View = "chat" | "status";
+
 const ChatBot = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Msg[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [view, setView] = useState<View>("chat");
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -89,10 +94,10 @@ const ChatBot = () => {
   }, [messages]);
 
   useEffect(() => {
-    if (isOpen && inputRef.current) {
+    if (isOpen && inputRef.current && view === "chat") {
       inputRef.current.focus();
     }
-  }, [isOpen]);
+  }, [isOpen, view]);
 
   const send = async (text: string) => {
     if (!text.trim() || isLoading) return;
@@ -130,6 +135,27 @@ const ChatBot = () => {
     }
   };
 
+  const handleQuickAction = (action: string) => {
+    if (action === "status") {
+      setView("status");
+    } else if (action === "schedule") {
+      setIsOpen(false);
+      document.getElementById("schedule")?.scrollIntoView({ behavior: "smooth" });
+    } else if (action === "pricing") {
+      setIsOpen(false);
+      document.getElementById("pricing")?.scrollIntoView({ behavior: "smooth" });
+    } else if (action === "events") {
+      setIsOpen(false);
+      document.getElementById("events")?.scrollIntoView({ behavior: "smooth" });
+    } else if (action === "services") {
+      setIsOpen(false);
+      document.getElementById("services")?.scrollIntoView({ behavior: "smooth" });
+    } else if (action === "signin") {
+      setIsOpen(false);
+      window.location.href = "/customer-login";
+    }
+  };
+
   return (
     <>
       {/* Floating bubble */}
@@ -147,102 +173,118 @@ const ChatBot = () => {
       {/* Chat window */}
       <div
         className={cn(
-          "fixed bottom-6 right-6 z-50 w-[380px] max-w-[calc(100vw-2rem)] h-[520px] max-h-[calc(100vh-4rem)] rounded-2xl border border-border/50 bg-background shadow-elevated flex flex-col overflow-hidden transition-all duration-300 origin-bottom-right",
+          "fixed bottom-6 right-6 z-50 w-[380px] max-w-[calc(100vw-2rem)] h-[560px] max-h-[calc(100vh-4rem)] rounded-2xl border border-border/50 bg-background shadow-elevated flex flex-col overflow-hidden transition-all duration-300 origin-bottom-right",
           isOpen ? "scale-100 opacity-100" : "scale-0 opacity-0 pointer-events-none"
         )}
       >
         {/* Header */}
         <div className="flex items-center justify-between px-4 py-3 border-b border-border/50 accent-gradient">
           <div className="flex items-center gap-2">
+            {view !== "chat" && (
+              <button onClick={() => setView("chat")} className="text-accent-foreground/70 hover:text-accent-foreground transition-colors">
+                <ArrowLeft className="w-4 h-4" />
+              </button>
+            )}
             <Bot className="w-5 h-5 text-accent-foreground" />
-            <span className="font-display font-semibold text-accent-foreground">UNiVale Assistant</span>
+            <span className="font-display font-semibold text-accent-foreground">
+              {view === "status" ? "Check Status" : "UNiVale Assistant"}
+            </span>
           </div>
           <button onClick={() => setIsOpen(false)} className="text-accent-foreground/70 hover:text-accent-foreground transition-colors">
             <X className="w-5 h-5" />
           </button>
         </div>
 
-        {/* Messages */}
-        <ScrollArea className="flex-1 px-4 py-3" ref={scrollRef}>
-          {messages.length === 0 && (
-            <div className="space-y-3">
-              <p className="text-sm text-muted-foreground text-center mb-4">
-                👋 Hi! I'm your UNiVale assistant. How can I help you today?
-              </p>
-              <div className="grid grid-cols-1 gap-2">
-                {SUGGESTIONS.map((s) => (
-                  <button
-                    key={s}
-                    onClick={() => send(s)}
-                    className="text-left text-xs px-3 py-2 rounded-lg border border-border/50 bg-muted/30 text-foreground hover:bg-muted/60 transition-colors"
+        {view === "status" ? (
+          <ChatStatusLookup />
+        ) : (
+          <>
+            {/* Messages */}
+            <ScrollArea className="flex-1 px-4 py-3" ref={scrollRef}>
+              {messages.length === 0 && (
+                <div className="space-y-3">
+                  <p className="text-sm text-muted-foreground text-center mb-4">
+                    👋 Hi! I'm your UNiVale assistant. How can I help you today?
+                  </p>
+                  <div className="grid grid-cols-1 gap-2">
+                    {SUGGESTIONS.map((s) => (
+                      <button
+                        key={s}
+                        onClick={() => send(s)}
+                        className="text-left text-xs px-3 py-2 rounded-lg border border-border/50 bg-muted/30 text-foreground hover:bg-muted/60 transition-colors"
+                      >
+                        {s}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {messages.map((m, i) => (
+                <div key={i} className={cn("flex gap-2 mb-3", m.role === "user" ? "justify-end" : "justify-start")}>
+                  {m.role === "assistant" && (
+                    <div className="w-6 h-6 rounded-full accent-gradient flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <Bot className="w-3 h-3 text-accent-foreground" />
+                    </div>
+                  )}
+                  <div
+                    className={cn(
+                      "max-w-[75%] rounded-xl px-3 py-2 text-sm whitespace-pre-wrap",
+                      m.role === "user"
+                        ? "bg-primary text-primary-foreground rounded-br-sm"
+                        : "bg-muted text-foreground rounded-bl-sm"
+                    )}
                   >
-                    {s}
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
+                    {m.content}
+                  </div>
+                  {m.role === "user" && (
+                    <div className="w-6 h-6 rounded-full bg-secondary flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <User className="w-3 h-3 text-secondary-foreground" />
+                    </div>
+                  )}
+                </div>
+              ))}
 
-          {messages.map((m, i) => (
-            <div key={i} className={cn("flex gap-2 mb-3", m.role === "user" ? "justify-end" : "justify-start")}>
-              {m.role === "assistant" && (
-                <div className="w-6 h-6 rounded-full accent-gradient flex items-center justify-center flex-shrink-0 mt-0.5">
-                  <Bot className="w-3 h-3 text-accent-foreground" />
+              {isLoading && messages[messages.length - 1]?.role === "user" && (
+                <div className="flex gap-2 mb-3">
+                  <div className="w-6 h-6 rounded-full accent-gradient flex items-center justify-center flex-shrink-0">
+                    <Bot className="w-3 h-3 text-accent-foreground" />
+                  </div>
+                  <div className="bg-muted rounded-xl px-3 py-2 rounded-bl-sm">
+                    <div className="flex gap-1">
+                      <span className="w-1.5 h-1.5 rounded-full bg-muted-foreground animate-bounce" style={{ animationDelay: "0ms" }} />
+                      <span className="w-1.5 h-1.5 rounded-full bg-muted-foreground animate-bounce" style={{ animationDelay: "150ms" }} />
+                      <span className="w-1.5 h-1.5 rounded-full bg-muted-foreground animate-bounce" style={{ animationDelay: "300ms" }} />
+                    </div>
+                  </div>
                 </div>
               )}
-              <div
-                className={cn(
-                  "max-w-[75%] rounded-xl px-3 py-2 text-sm whitespace-pre-wrap",
-                  m.role === "user"
-                    ? "bg-primary text-primary-foreground rounded-br-sm"
-                    : "bg-muted text-foreground rounded-bl-sm"
-                )}
+            </ScrollArea>
+
+            {/* Quick Actions */}
+            <ChatQuickActions onAction={handleQuickAction} />
+
+            {/* Input */}
+            <div className="px-3 py-3 border-t border-border/50">
+              <form
+                onSubmit={(e) => { e.preventDefault(); send(input); }}
+                className="flex gap-2"
               >
-                {m.content}
-              </div>
-              {m.role === "user" && (
-                <div className="w-6 h-6 rounded-full bg-secondary flex items-center justify-center flex-shrink-0 mt-0.5">
-                  <User className="w-3 h-3 text-secondary-foreground" />
-                </div>
-              )}
+                <Input
+                  ref={inputRef}
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  placeholder="Ask me anything..."
+                  className="flex-1 text-sm h-9"
+                  disabled={isLoading}
+                />
+                <Button type="submit" size="icon" className="h-9 w-9 accent-gradient" disabled={isLoading || !input.trim()}>
+                  <Send className="w-4 h-4 text-accent-foreground" />
+                </Button>
+              </form>
             </div>
-          ))}
-
-          {isLoading && messages[messages.length - 1]?.role === "user" && (
-            <div className="flex gap-2 mb-3">
-              <div className="w-6 h-6 rounded-full accent-gradient flex items-center justify-center flex-shrink-0">
-                <Bot className="w-3 h-3 text-accent-foreground" />
-              </div>
-              <div className="bg-muted rounded-xl px-3 py-2 rounded-bl-sm">
-                <div className="flex gap-1">
-                  <span className="w-1.5 h-1.5 rounded-full bg-muted-foreground animate-bounce" style={{ animationDelay: "0ms" }} />
-                  <span className="w-1.5 h-1.5 rounded-full bg-muted-foreground animate-bounce" style={{ animationDelay: "150ms" }} />
-                  <span className="w-1.5 h-1.5 rounded-full bg-muted-foreground animate-bounce" style={{ animationDelay: "300ms" }} />
-                </div>
-              </div>
-            </div>
-          )}
-        </ScrollArea>
-
-        {/* Input */}
-        <div className="px-3 py-3 border-t border-border/50">
-          <form
-            onSubmit={(e) => { e.preventDefault(); send(input); }}
-            className="flex gap-2"
-          >
-            <Input
-              ref={inputRef}
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              placeholder="Ask me anything..."
-              className="flex-1 text-sm h-9"
-              disabled={isLoading}
-            />
-            <Button type="submit" size="icon" className="h-9 w-9 accent-gradient" disabled={isLoading || !input.trim()}>
-              <Send className="w-4 h-4 text-accent-foreground" />
-            </Button>
-          </form>
-        </div>
+          </>
+        )}
       </div>
     </>
   );
