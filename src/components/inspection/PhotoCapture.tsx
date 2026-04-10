@@ -5,10 +5,13 @@ import CarOutlineOverlay from "./CarOutlineOverlay";
 
 type CarAngle = "front" | "back" | "left" | "right";
 
+type VehicleType = "sedan" | "suv";
+
 interface PhotoCaptureProps {
   angle: CarAngle;
   label: string;
   photo: string | null;
+  vehicleType?: VehicleType;
   onCapture: (angle: CarAngle, dataUrl: string) => void;
   onClear: (angle: CarAngle) => void;
 }
@@ -40,7 +43,7 @@ const resizeImage = (file: File): Promise<string> => {
   });
 };
 
-const PhotoCapture = ({ angle, label, photo, onCapture, onClear }: PhotoCaptureProps) => {
+const PhotoCapture = ({ angle, label, photo, vehicleType = "sedan", onCapture, onClear }: PhotoCaptureProps) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const [showOverlay] = useState(true);
 
@@ -76,7 +79,7 @@ const PhotoCapture = ({ angle, label, photo, onCapture, onClear }: PhotoCaptureP
         className="relative aspect-[4/3] rounded-lg overflow-hidden border-2 border-dashed border-border bg-muted/50 cursor-pointer hover:border-secondary/50 transition-colors"
         onClick={() => inputRef.current?.click()}
       >
-        {showOverlay && <CarOutlineOverlay angle={angle} />}
+        {showOverlay && <CarOutlineOverlay angle={angle} vehicleType={vehicleType} />}
         <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 z-20">
           <Camera className="w-8 h-8 text-muted-foreground" />
           <span className="text-xs text-muted-foreground">Tap to capture</span>

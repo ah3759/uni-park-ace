@@ -308,6 +308,7 @@ const Dashboard = () => {
                                   requestId={req.id}
                                   customerName={`${req.first_name} ${req.last_name}`}
                                   vehicleInfo={`${req.vehicle_color} ${req.vehicle_make} ${req.vehicle_model}`}
+                                  vehicleModel={req.vehicle_model}
                                   licensePlate={req.license_plate}
                                   onComplete={() => fetchRequests()}
                                   onClose={() => setInspectingRequest(null)}

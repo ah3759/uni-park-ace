@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { toast } from "@/components/ui/use-toast";
 import { Loader2, ClipboardCheck, Camera, MapPin, CheckCircle } from "lucide-react";
 import PhotoCapture from "./PhotoCapture";
+import { getVehicleType } from "./CarOutlineOverlay";
 import ParkingLocation from "./ParkingLocation";
 
 type CarAngle = "front" | "back" | "left" | "right";
@@ -15,6 +16,7 @@ interface InspectionWorkflowProps {
   requestId: string;
   customerName: string;
   vehicleInfo: string;
+  vehicleModel: string;
   licensePlate: string;
   onComplete: () => void;
   onClose: () => void;
@@ -37,9 +39,10 @@ const dataUrlToBlob = (dataUrl: string): Blob => {
 };
 
 const InspectionWorkflow = ({
-  requestId, customerName, vehicleInfo, licensePlate,
+  requestId, customerName, vehicleInfo, vehicleModel, licensePlate,
   onComplete, onClose,
 }: InspectionWorkflowProps) => {
+  const vehicleType = getVehicleType(vehicleModel);
   const [step, setStep] = useState<Step>("verify");
   const [photos, setPhotos] = useState<Record<CarAngle, string | null>>({
     front: null, back: null, left: null, right: null,
@@ -241,6 +244,7 @@ const InspectionWorkflow = ({
                   angle={angle}
                   label={label}
                   photo={photos[angle]}
+                  vehicleType={vehicleType}
                   onCapture={handleCapture}
                   onClear={handleClear}
                 />
