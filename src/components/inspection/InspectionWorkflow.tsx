@@ -244,6 +244,7 @@ const InspectionWorkflow = ({
                   angle={angle}
                   label={label}
                   photo={photos[angle]}
+                  vehicleType={vehicleType}
                   onCapture={handleCapture}
                   onClear={handleClear}
                 />
