@@ -382,6 +382,91 @@ export type Database = {
         }
         Relationships: []
       }
+      vehicle_inspections: {
+        Row: {
+          created_at: string
+          employee_id: string
+          id: string
+          notes: string | null
+          parking_description: string | null
+          parking_latitude: number | null
+          parking_longitude: number | null
+          parking_photo_path: string | null
+          request_id: string
+          status: Database["public"]["Enums"]["inspection_status"]
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          employee_id: string
+          id?: string
+          notes?: string | null
+          parking_description?: string | null
+          parking_latitude?: number | null
+          parking_longitude?: number | null
+          parking_photo_path?: string | null
+          request_id: string
+          status?: Database["public"]["Enums"]["inspection_status"]
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          employee_id?: string
+          id?: string
+          notes?: string | null
+          parking_description?: string | null
+          parking_latitude?: number | null
+          parking_longitude?: number | null
+          parking_photo_path?: string | null
+          request_id?: string
+          status?: Database["public"]["Enums"]["inspection_status"]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vehicle_inspections_request_id_fkey"
+            columns: ["request_id"]
+            isOneToOne: true
+            referencedRelation: "parking_requests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      vehicle_photos: {
+        Row: {
+          angle: string
+          created_at: string
+          id: string
+          inspection_id: string
+          notes: string | null
+          photo_path: string
+        }
+        Insert: {
+          angle: string
+          created_at?: string
+          id?: string
+          inspection_id: string
+          notes?: string | null
+          photo_path: string
+        }
+        Update: {
+          angle?: string
+          created_at?: string
+          id?: string
+          inspection_id?: string
+          notes?: string | null
+          photo_path?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vehicle_photos_inspection_id_fkey"
+            columns: ["inspection_id"]
+            isOneToOne: false
+            referencedRelation: "vehicle_inspections"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
@@ -424,6 +509,7 @@ export type Database = {
     }
     Enums: {
       app_role: "admin" | "employee"
+      inspection_status: "pending" | "photos_taken" | "parked" | "completed"
       request_status:
         | "pending"
         | "confirmed"
@@ -558,6 +644,7 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["admin", "employee"],
+      inspection_status: ["pending", "photos_taken", "parked", "completed"],
       request_status: [
         "pending",
         "confirmed",

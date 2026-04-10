@@ -10,7 +10,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/components/ui/use-toast";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { LogOut, Car, Search, Clock, CheckCircle, XCircle, PlayCircle, AlertCircle, MessageSquare, RefreshCw, Shield } from "lucide-react";
+import { LogOut, Car, Search, Clock, CheckCircle, XCircle, PlayCircle, AlertCircle, MessageSquare, RefreshCw, Shield, ClipboardCheck } from "lucide-react";
+import InspectionWorkflow from "@/components/inspection/InspectionWorkflow";
 
 type RequestStatus = "pending" | "confirmed" | "in_progress" | "completed" | "cancelled";
 
@@ -66,6 +67,7 @@ const Dashboard = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [selectedRequest, setSelectedRequest] = useState<ParkingRequest | null>(null);
+  const [inspectingRequest, setInspectingRequest] = useState<ParkingRequest | null>(null);
   const [notes, setNotes] = useState<RequestNote[]>([]);
   const [newNote, setNewNote] = useState("");
 
@@ -290,111 +292,135 @@ const Dashboard = () => {
                         {new Date(req.created_at).toLocaleString()}
                       </td>
                       <td className="p-3">
-                        <Dialog>
-                          <DialogTrigger asChild>
-                            <Button variant="outline" size="sm" onClick={() => openDetail(req)}>
-                              View
-                            </Button>
-                          </DialogTrigger>
-                          <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
-                            {selectedRequest && selectedRequest.id === req.id && (
-                              <>
+                        <div className="flex gap-1">
+                          {(req.status === "pending" || req.status === "confirmed") && (
+                            <Dialog open={inspectingRequest?.id === req.id} onOpenChange={(open) => !open && setInspectingRequest(null)}>
+                              <DialogTrigger asChild>
+                                <Button variant="default" size="sm" onClick={() => setInspectingRequest(req)}>
+                                  <ClipboardCheck className="w-4 h-4 mr-1" /> Inspect
+                                </Button>
+                              </DialogTrigger>
+                              <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
                                 <DialogHeader>
-                                  <DialogTitle className="font-display">
-                                    {selectedRequest.first_name} {selectedRequest.last_name}
-                                  </DialogTitle>
+                                  <DialogTitle className="font-display">Vehicle Inspection</DialogTitle>
                                 </DialogHeader>
-                                <div className="space-y-4 text-sm">
-                                  {/* Contact */}
-                                  <div>
-                                    <h4 className="font-medium text-foreground mb-1">Contact Info</h4>
-                                    <p className="text-muted-foreground">{selectedRequest.email}</p>
-                                    <p className="text-muted-foreground">{selectedRequest.phone}</p>
-                                  </div>
-                                  {/* Vehicle */}
-                                  <div>
-                                    <h4 className="font-medium text-foreground mb-1">Vehicle</h4>
-                                    <p className="text-muted-foreground">
-                                      {selectedRequest.vehicle_color} {selectedRequest.vehicle_make} {selectedRequest.vehicle_model}
-                                    </p>
-                                    <p className="text-muted-foreground font-mono">{selectedRequest.license_plate}</p>
-                                  </div>
-                                  {/* Location & Service */}
-                                  <div className="grid grid-cols-2 gap-4">
+                                <InspectionWorkflow
+                                  requestId={req.id}
+                                  customerName={`${req.first_name} ${req.last_name}`}
+                                  vehicleInfo={`${req.vehicle_color} ${req.vehicle_make} ${req.vehicle_model}`}
+                                  licensePlate={req.license_plate}
+                                  onComplete={() => fetchRequests()}
+                                  onClose={() => setInspectingRequest(null)}
+                                />
+                              </DialogContent>
+                            </Dialog>
+                          )}
+                          <Dialog>
+                            <DialogTrigger asChild>
+                              <Button variant="outline" size="sm" onClick={() => openDetail(req)}>
+                                View
+                              </Button>
+                            </DialogTrigger>
+                            <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
+                              {selectedRequest && selectedRequest.id === req.id && (
+                                <>
+                                  <DialogHeader>
+                                    <DialogTitle className="font-display">
+                                      {selectedRequest.first_name} {selectedRequest.last_name}
+                                    </DialogTitle>
+                                  </DialogHeader>
+                                  <div className="space-y-4 text-sm">
+                                    {/* Contact */}
                                     <div>
-                                      <h4 className="font-medium text-foreground mb-1">Pickup Location</h4>
+                                      <h4 className="font-medium text-foreground mb-1">Contact Info</h4>
+                                      <p className="text-muted-foreground">{selectedRequest.email}</p>
+                                      <p className="text-muted-foreground">{selectedRequest.phone}</p>
+                                    </div>
+                                    {/* Vehicle */}
+                                    <div>
+                                      <h4 className="font-medium text-foreground mb-1">Vehicle</h4>
                                       <p className="text-muted-foreground">
-                                        {locationLabels[selectedRequest.pickup_location] || selectedRequest.pickup_location}
+                                        {selectedRequest.vehicle_color} {selectedRequest.vehicle_make} {selectedRequest.vehicle_model}
                                       </p>
+                                      <p className="text-muted-foreground font-mono">{selectedRequest.license_plate}</p>
                                     </div>
+                                    {/* Location & Service */}
+                                    <div className="grid grid-cols-2 gap-4">
+                                      <div>
+                                        <h4 className="font-medium text-foreground mb-1">Pickup Location</h4>
+                                        <p className="text-muted-foreground">
+                                          {locationLabels[selectedRequest.pickup_location] || selectedRequest.pickup_location}
+                                        </p>
+                                      </div>
+                                      <div>
+                                        <h4 className="font-medium text-foreground mb-1">Service Type</h4>
+                                        <p className="text-muted-foreground capitalize">{selectedRequest.service_type}</p>
+                                      </div>
+                                    </div>
+                                    {/* Special Instructions */}
+                                    {selectedRequest.special_instructions && (
+                                      <div>
+                                        <h4 className="font-medium text-foreground mb-1">Special Instructions</h4>
+                                        <p className="text-muted-foreground">{selectedRequest.special_instructions}</p>
+                                      </div>
+                                    )}
+                                    {/* Timestamp */}
                                     <div>
-                                      <h4 className="font-medium text-foreground mb-1">Service Type</h4>
-                                      <p className="text-muted-foreground capitalize">{selectedRequest.service_type}</p>
+                                      <h4 className="font-medium text-foreground mb-1">Submitted</h4>
+                                      <p className="text-muted-foreground">{new Date(selectedRequest.created_at).toLocaleString()}</p>
                                     </div>
-                                  </div>
-                                  {/* Special Instructions */}
-                                  {selectedRequest.special_instructions && (
+                                    {/* Status Update */}
                                     <div>
-                                      <h4 className="font-medium text-foreground mb-1">Special Instructions</h4>
-                                      <p className="text-muted-foreground">{selectedRequest.special_instructions}</p>
+                                      <h4 className="font-medium text-foreground mb-2">Update Status</h4>
+                                      <div className="flex flex-wrap gap-2">
+                                        {(Object.keys(statusConfig) as RequestStatus[]).map(s => (
+                                          <Button
+                                            key={s}
+                                            variant={selectedRequest.status === s ? "default" : "outline"}
+                                            size="sm"
+                                            onClick={() => updateStatus(selectedRequest.id, s)}
+                                            className="text-xs"
+                                          >
+                                            {statusConfig[s].label}
+                                          </Button>
+                                        ))}
+                                      </div>
                                     </div>
-                                  )}
-                                  {/* Timestamp */}
-                                  <div>
-                                    <h4 className="font-medium text-foreground mb-1">Submitted</h4>
-                                    <p className="text-muted-foreground">{new Date(selectedRequest.created_at).toLocaleString()}</p>
-                                  </div>
-                                  {/* Status Update */}
-                                  <div>
-                                    <h4 className="font-medium text-foreground mb-2">Update Status</h4>
-                                    <div className="flex flex-wrap gap-2">
-                                      {(Object.keys(statusConfig) as RequestStatus[]).map(s => (
-                                        <Button
-                                          key={s}
-                                          variant={selectedRequest.status === s ? "default" : "outline"}
-                                          size="sm"
-                                          onClick={() => updateStatus(selectedRequest.id, s)}
-                                          className="text-xs"
-                                        >
-                                          {statusConfig[s].label}
+                                    {/* Notes */}
+                                    <div>
+                                      <h4 className="font-medium text-foreground mb-2 flex items-center gap-1">
+                                        <MessageSquare className="w-4 h-4" /> Internal Notes
+                                      </h4>
+                                      <div className="space-y-2 mb-3 max-h-40 overflow-y-auto">
+                                        {notes.length === 0 ? (
+                                          <p className="text-muted-foreground text-xs">No notes yet</p>
+                                        ) : (
+                                          notes.map(n => (
+                                            <div key={n.id} className="p-2 bg-muted/50 rounded text-xs">
+                                              <p className="text-foreground">{n.content}</p>
+                                              <p className="text-muted-foreground mt-1">{new Date(n.created_at).toLocaleString()}</p>
+                                            </div>
+                                          ))
+                                        )}
+                                      </div>
+                                      <div className="flex gap-2">
+                                        <Textarea
+                                          placeholder="Add a note..."
+                                          value={newNote}
+                                          onChange={(e) => setNewNote(e.target.value)}
+                                          className="min-h-[60px] text-sm"
+                                        />
+                                        <Button size="sm" onClick={addNote} disabled={!newNote.trim()}>
+                                          Add
                                         </Button>
-                                      ))}
+                                      </div>
                                     </div>
                                   </div>
-                                  {/* Notes */}
-                                  <div>
-                                    <h4 className="font-medium text-foreground mb-2 flex items-center gap-1">
-                                      <MessageSquare className="w-4 h-4" /> Internal Notes
-                                    </h4>
-                                    <div className="space-y-2 mb-3 max-h-40 overflow-y-auto">
-                                      {notes.length === 0 ? (
-                                        <p className="text-muted-foreground text-xs">No notes yet</p>
-                                      ) : (
-                                        notes.map(n => (
-                                          <div key={n.id} className="p-2 bg-muted/50 rounded text-xs">
-                                            <p className="text-foreground">{n.content}</p>
-                                            <p className="text-muted-foreground mt-1">{new Date(n.created_at).toLocaleString()}</p>
-                                          </div>
-                                        ))
-                                      )}
-                                    </div>
-                                    <div className="flex gap-2">
-                                      <Textarea
-                                        placeholder="Add a note..."
-                                        value={newNote}
-                                        onChange={(e) => setNewNote(e.target.value)}
-                                        className="min-h-[60px] text-sm"
-                                      />
-                                      <Button size="sm" onClick={addNote} disabled={!newNote.trim()}>
-                                        Add
-                                      </Button>
-                                    </div>
-                                  </div>
-                                </div>
-                              </>
-                            )}
-                          </DialogContent>
-                        </Dialog>
+                                </>
+                              )}
+                            </DialogContent>
+                          </Dialog>
+                        </div>
                       </td>
                     </tr>
                   );
