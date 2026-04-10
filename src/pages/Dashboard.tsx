@@ -67,6 +67,7 @@ const Dashboard = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [selectedRequest, setSelectedRequest] = useState<ParkingRequest | null>(null);
+  const [inspectingRequest, setInspectingRequest] = useState<ParkingRequest | null>(null);
   const [notes, setNotes] = useState<RequestNote[]>([]);
   const [newNote, setNewNote] = useState("");
 
