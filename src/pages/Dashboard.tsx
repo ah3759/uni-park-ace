@@ -10,7 +10,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/components/ui/use-toast";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { LogOut, Car, Search, Clock, CheckCircle, XCircle, PlayCircle, AlertCircle, MessageSquare, RefreshCw, Shield } from "lucide-react";
+import { LogOut, Car, Search, Clock, CheckCircle, XCircle, PlayCircle, AlertCircle, MessageSquare, RefreshCw, Shield, ClipboardCheck } from "lucide-react";
+import InspectionWorkflow from "@/components/inspection/InspectionWorkflow";
 
 type RequestStatus = "pending" | "confirmed" | "in_progress" | "completed" | "cancelled";
 
