@@ -1,11 +1,11 @@
 import { cn } from "@/lib/utils";
 
-import sedanLeft from "@/assets/inspection/sedan-left.png";
-import sedanFront from "@/assets/inspection/sedan-front.png";
-import sedanBack from "@/assets/inspection/sedan-back.png";
-import suvLeft from "@/assets/inspection/suv-left.png";
-import suvFront from "@/assets/inspection/suv-front.png";
-import suvBack from "@/assets/inspection/suv-back.png";
+import sedanLeft from "@/assets/inspection/sedan-left-t.png";
+import sedanFront from "@/assets/inspection/sedan-front-t.png";
+import sedanBack from "@/assets/inspection/sedan-back-t.png";
+import suvLeft from "@/assets/inspection/suv-left-t.png";
+import suvFront from "@/assets/inspection/suv-front-t.png";
+import suvBack from "@/assets/inspection/suv-back-t.png";
 
 type CarAngle = "front" | "back" | "left" | "right";
 type VehicleType = "sedan" | "suv";
@@ -54,7 +54,7 @@ const CarOutlineOverlay = ({ angle, vehicleType = "sedan", className }: CarOutli
         src={src}
         alt={`${vehicleType} ${angle} guide`}
         className={cn(
-          "max-w-[85%] max-h-[85%] object-contain opacity-40 mix-blend-multiply",
+          "max-w-[85%] max-h-[85%] object-contain opacity-50",
           flip && "scale-x-[-1]"
         )}
         draggable={false}
