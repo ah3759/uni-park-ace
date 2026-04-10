@@ -74,6 +74,25 @@ const BusinessBooking = () => {
     if (error) {
       toast({ title: "Failed to submit inquiry", description: error.message, variant: "destructive" });
     } else {
+      // Send confirmation email
+      try {
+        await supabase.functions.invoke("send-transactional-email", {
+          body: {
+            templateName: "inquiry-confirmation",
+            recipientEmail: form.contact_email.trim(),
+            templateData: {
+              customerName: form.contact_name.trim(),
+              businessName: form.business_name.trim(),
+              eventType: form.event_type,
+              eventDate: eventDate ? format(eventDate, "PPP") : "",
+              siteName: "UniVale",
+            },
+          },
+        });
+      } catch (emailErr) {
+        console.error("Failed to send confirmation email", emailErr);
+      }
+
       toast({ title: "Inquiry Submitted!", description: "We'll be in touch within 24 hours to discuss your event." });
       setForm({
         business_name: "", contact_name: "", contact_email: "",
