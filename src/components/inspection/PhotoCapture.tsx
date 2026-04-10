@@ -1,8 +1,7 @@
 import { useRef, useState, useCallback } from "react";
 import { Button } from "@/components/ui/button";
-import { Camera, Check, RotateCcw, Upload } from "lucide-react";
+import { Camera, Check, RotateCcw } from "lucide-react";
 import CarOutlineOverlay from "./CarOutlineOverlay";
-import { cn } from "@/lib/utils";
 
 type CarAngle = "front" | "back" | "left" | "right";
 
@@ -43,7 +42,7 @@ const resizeImage = (file: File): Promise<string> => {
 
 const PhotoCapture = ({ angle, label, photo, onCapture, onClear }: PhotoCaptureProps) => {
   const inputRef = useRef<HTMLInputElement>(null);
-  const [showOverlay, setShowOverlay] = useState(true);
+  const [showOverlay] = useState(true);
 
   const handleFile = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
