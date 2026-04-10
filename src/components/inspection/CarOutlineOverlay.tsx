@@ -49,16 +49,17 @@ const CarOutlineOverlay = ({ angle, vehicleType = "sedan", className }: CarOutli
   const { src, flip } = imageMap[vehicleType][angle];
 
   return (
-    <img
-      src={src}
-      alt={`${vehicleType} ${angle} guide`}
-      className={cn(
-        "absolute inset-0 w-full h-full object-contain pointer-events-none z-10 opacity-40 mix-blend-multiply",
-        flip && "scale-x-[-1]",
-        className
-      )}
-      draggable={false}
-    />
+    <div className={cn("absolute inset-0 flex items-center justify-center pointer-events-none z-10", className)}>
+      <img
+        src={src}
+        alt={`${vehicleType} ${angle} guide`}
+        className={cn(
+          "max-w-[85%] max-h-[85%] object-contain opacity-40 mix-blend-multiply",
+          flip && "scale-x-[-1]"
+        )}
+        draggable={false}
+      />
+    </div>
   );
 };
 
