@@ -2,24 +2,40 @@ import { cn } from "@/lib/utils";
 
 type CarAngle = "front" | "back" | "left" | "right";
 
-const outlines: Record<CarAngle, string> = {
-  front: `M 30 80 Q 30 40 50 30 Q 70 20 100 18 Q 130 20 150 30 Q 170 40 170 80 L 170 120 Q 170 140 160 150 L 40 150 Q 30 140 30 120 Z
-          M 50 60 L 70 45 L 130 45 L 150 60 Z
-          M 45 100 A 10 8 0 1 1 65 100 A 10 8 0 1 1 45 100
-          M 135 100 A 10 8 0 1 1 155 100 A 10 8 0 1 1 135 100`,
-  back: `M 30 80 Q 30 40 50 30 Q 70 22 100 20 Q 130 22 150 30 Q 170 40 170 80 L 170 120 Q 170 140 160 150 L 40 150 Q 30 140 30 120 Z
-         M 50 55 L 65 40 L 135 40 L 150 55 Z
-         M 55 130 L 80 130 M 120 130 L 145 130
-         M 45 100 A 10 8 0 1 1 65 100 A 10 8 0 1 1 45 100
-         M 135 100 A 10 8 0 1 1 155 100 A 10 8 0 1 1 135 100`,
-  left: `M 20 90 Q 25 50 60 40 L 90 38 L 120 30 L 160 38 Q 180 42 180 60 L 180 100 Q 180 120 170 130 L 30 130 Q 20 120 20 100 Z
-         M 65 42 L 80 30 L 120 28 L 130 42 Z
-         M 30 105 A 15 12 0 1 1 60 105 A 15 12 0 1 1 30 105
-         M 140 105 A 15 12 0 1 1 170 105 A 15 12 0 1 1 140 105`,
-  right: `M 20 60 Q 20 42 40 38 L 80 30 L 110 38 L 140 40 Q 175 50 180 90 L 180 100 Q 180 120 170 130 L 30 130 Q 20 120 20 100 Z
-          M 70 42 L 80 28 L 120 30 L 135 42 Z
-          M 30 105 A 15 12 0 1 1 60 105 A 15 12 0 1 1 30 105
-          M 140 105 A 15 12 0 1 1 170 105 A 15 12 0 1 1 140 105`,
+const outlines: Record<CarAngle, { path: string; viewBox: string }> = {
+  front: {
+    viewBox: "0 0 200 170",
+    path: `M 40 130 L 40 80 Q 40 55 55 45 L 75 35 Q 100 28 125 35 L 145 45 Q 160 55 160 80 L 160 130 Q 160 145 150 150 L 50 150 Q 40 145 40 130 Z
+           M 55 65 L 70 48 L 130 48 L 145 65 Z
+           M 50 100 L 65 95 L 65 105 L 50 100 Z
+           M 135 100 L 150 95 L 150 105 L 135 100 Z
+           M 80 140 L 120 140`,
+  },
+  back: {
+    viewBox: "0 0 200 170",
+    path: `M 40 130 L 40 80 Q 40 55 55 45 L 75 35 Q 100 28 125 35 L 145 45 Q 160 55 160 80 L 160 130 Q 160 145 150 150 L 50 150 Q 40 145 40 130 Z
+           M 55 60 L 68 42 L 132 42 L 145 60 Z
+           M 50 100 L 65 95 L 65 105 L 50 100 Z
+           M 135 100 L 150 95 L 150 105 L 135 100 Z
+           M 60 135 L 85 135 M 115 135 L 140 135
+           M 90 150 L 110 150`,
+  },
+  left: {
+    viewBox: "0 0 220 150",
+    path: `M 20 100 L 20 75 Q 22 55 40 48 L 70 42 L 95 30 L 130 28 Q 145 30 150 42 L 155 48 Q 185 50 195 65 L 200 80 L 200 100 Q 200 115 190 120 L 30 120 Q 20 115 20 100 Z
+           M 75 44 L 90 28 L 135 28 L 145 44 Z
+           M 30 105 A 14 14 0 1 1 58 105 A 14 14 0 1 1 30 105
+           M 162 105 A 14 14 0 1 1 190 105 A 14 14 0 1 1 162 105
+           M 65 70 L 65 100 M 155 70 L 155 100`,
+  },
+  right: {
+    viewBox: "0 0 220 150",
+    path: `M 200 100 L 200 75 Q 198 55 180 48 L 150 42 L 125 30 L 90 28 Q 75 30 70 42 L 65 48 Q 35 50 25 65 L 20 80 L 20 100 Q 20 115 30 120 L 190 120 Q 200 115 200 100 Z
+           M 145 44 L 130 28 L 85 28 L 75 44 Z
+           M 162 105 A 14 14 0 1 1 190 105 A 14 14 0 1 1 162 105
+           M 30 105 A 14 14 0 1 1 58 105 A 14 14 0 1 1 30 105
+           M 65 70 L 65 100 M 155 70 L 155 100`,
+  },
 };
 
 interface CarOutlineOverlayProps {
@@ -28,16 +44,17 @@ interface CarOutlineOverlayProps {
 }
 
 const CarOutlineOverlay = ({ angle, className }: CarOutlineOverlayProps) => {
+  const { path, viewBox } = outlines[angle];
   return (
     <svg
-      viewBox="0 200"
+      viewBox={viewBox}
       className={cn("absolute inset-0 w-full h-full pointer-events-none z-10", className)}
       preserveAspectRatio="xMidYMid meet"
     >
       <path
-        d={outlines[angle]}
+        d={path}
         fill="none"
-        stroke="rgba(255,255,255,0.5)"
+        stroke="rgba(255,255,255,0.55)"
         strokeWidth="2"
         strokeDasharray="6 4"
       />
