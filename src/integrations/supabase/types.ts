@@ -27,6 +27,7 @@ export type Database = {
           event_type: string
           expected_guests: number
           id: string
+          license_plate_state: string | null
           status: string
           updated_at: string
           venue_location: string
@@ -43,6 +44,7 @@ export type Database = {
           event_type: string
           expected_guests: number
           id?: string
+          license_plate_state?: string | null
           status?: string
           updated_at?: string
           venue_location: string
@@ -59,6 +61,7 @@ export type Database = {
           event_type?: string
           expected_guests?: number
           id?: string
+          license_plate_state?: string | null
           status?: string
           updated_at?: string
           venue_location?: string
@@ -161,6 +164,7 @@ export type Database = {
           id: string
           last_name: string
           license_plate: string
+          license_plate_state: string | null
           phone: string
           pickup_location: string
           service_type: string
@@ -179,6 +183,7 @@ export type Database = {
           id?: string
           last_name: string
           license_plate: string
+          license_plate_state?: string | null
           phone: string
           pickup_location: string
           service_type?: string
@@ -197,6 +202,7 @@ export type Database = {
           id?: string
           last_name?: string
           license_plate?: string
+          license_plate_state?: string | null
           phone?: string
           pickup_location?: string
           service_type?: string
@@ -336,6 +342,7 @@ export type Database = {
           customer_phone: string
           id: string
           license_plate: string
+          license_plate_state: string | null
           pickup_location: string
           scheduled_date: string
           scheduled_time: string
@@ -353,6 +360,7 @@ export type Database = {
           customer_phone: string
           id?: string
           license_plate: string
+          license_plate_state?: string | null
           pickup_location: string
           scheduled_date: string
           scheduled_time: string
@@ -370,6 +378,7 @@ export type Database = {
           customer_phone?: string
           id?: string
           license_plate?: string
+          license_plate_state?: string | null
           pickup_location?: string
           scheduled_date?: string
           scheduled_time?: string
