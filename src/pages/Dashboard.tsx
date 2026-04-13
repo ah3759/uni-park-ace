@@ -93,6 +93,10 @@ const Dashboard = () => {
   const [formData, setFormData] = useState(emptyForm);
   const [formSubmitting, setFormSubmitting] = useState(false);
 
+  // Delete confirmation state
+  const [deleteConfirmCode, setDeleteConfirmCode] = useState("");
+  const DELETE_CODE = "8888";
+
   useEffect(() => {
     if (!authLoading && (!user || !isEmployee)) {
       navigate("/login");
@@ -523,7 +527,7 @@ const Dashboard = () => {
                               )}
                             </DialogContent>
                           </Dialog>
-                          <AlertDialog>
+                          <AlertDialog onOpenChange={() => setDeleteConfirmCode("")}>
                             <AlertDialogTrigger asChild>
                               <Button variant="outline" size="sm" className="text-destructive hover:text-destructive">
                                 <Trash2 className="w-4 h-4" />
@@ -536,9 +540,26 @@ const Dashboard = () => {
                                   Are you sure you want to delete the request for {req.first_name} {req.last_name}? This action cannot be undone.
                                 </AlertDialogDescription>
                               </AlertDialogHeader>
+                              <div className="py-4">
+                                <Label htmlFor={`delete-code-${req.id}`} className="text-sm font-medium">
+                                  Enter confirmation code <span className="font-bold">{DELETE_CODE}</span> to delete
+                                </Label>
+                                <Input
+                                  id={`delete-code-${req.id}`}
+                                  className="mt-2"
+                                  placeholder="Enter 4-digit code"
+                                  maxLength={4}
+                                  value={deleteConfirmCode}
+                                  onChange={(e) => setDeleteConfirmCode(e.target.value.replace(/\D/g, ""))}
+                                />
+                              </div>
                               <AlertDialogFooter>
                                 <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                <AlertDialogAction onClick={() => deleteRequest(req.id)} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+                                <AlertDialogAction
+                                  disabled={deleteConfirmCode !== DELETE_CODE}
+                                  onClick={() => deleteRequest(req.id)}
+                                  className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                                >
                                   Delete
                                 </AlertDialogAction>
                               </AlertDialogFooter>
