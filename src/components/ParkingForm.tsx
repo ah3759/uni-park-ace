@@ -25,7 +25,7 @@ const parkingFormSchema = z.object({
   vehicleColor: z.string().trim().min(1, "Vehicle color is required").max(30, "Vehicle color must be less than 30 characters"),
   licensePlate: z.string().trim().min(1, "License plate is required").max(15, "License plate must be less than 15 characters"),
   licensePlateState: z.string().min(1, "License plate state is required"),
-  serviceType: z.enum(["single", "monthly", "semester"]),
+  pickupLocation: z.string().min(1, "Pickup location is required"),
   specialInstructions: z.string().max(500, "Special instructions must be less than 500 characters").optional(),
   agreeToTerms: z.boolean().refine(val => val === true, "You must agree to the terms"),
 });
@@ -248,6 +248,7 @@ const ParkingForm = () => {
                     </Select>
                     {errors.licensePlateState && <p className="text-sm text-destructive">{errors.licensePlateState}</p>}
                   </div>
+                </div>
               </div>
 
               {/* Pickup Location */}
