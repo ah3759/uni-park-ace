@@ -24,7 +24,7 @@ const parkingFormSchema = z.object({
   vehicleYear: z.string().trim().min(1, "Vehicle year is required"),
   vehicleColor: z.string().trim().min(1, "Vehicle color is required").max(30, "Vehicle color must be less than 30 characters"),
   licensePlate: z.string().trim().min(1, "License plate is required").max(15, "License plate must be less than 15 characters"),
-  pickupLocation: z.string().min(1, "Pickup location is required"),
+  licensePlateState: z.string().min(1, "License plate state is required"),
   serviceType: z.enum(["single", "monthly", "semester"]),
   specialInstructions: z.string().max(500, "Special instructions must be less than 500 characters").optional(),
   agreeToTerms: z.boolean().refine(val => val === true, "You must agree to the terms"),
@@ -64,6 +64,7 @@ const ParkingForm = () => {
         vehicle_model: validatedData.vehicleModel,
         vehicle_color: validatedData.vehicleColor,
         license_plate: validatedData.licensePlate,
+        license_plate_state: validatedData.licensePlateState,
         pickup_location: validatedData.pickupLocation,
         service_type: validatedData.serviceType,
         special_instructions: validatedData.specialInstructions || null,
@@ -230,7 +231,23 @@ const ParkingForm = () => {
                     />
                     {errors.licensePlate && <p className="text-sm text-destructive">{errors.licensePlate}</p>}
                   </div>
-                </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="licensePlateState">Plate State *</Label>
+                    <Select
+                      value={formData.licensePlateState || ""}
+                      onValueChange={(value) => handleInputChange("licensePlateState", value)}
+                    >
+                      <SelectTrigger className={errors.licensePlateState ? "border-destructive" : ""}>
+                        <SelectValue placeholder="Select state" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {US_STATES.map((s) => (
+                          <SelectItem key={s.value} value={s.value}>{s.label}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    {errors.licensePlateState && <p className="text-sm text-destructive">{errors.licensePlateState}</p>}
+                  </div>
               </div>
 
               {/* Pickup Location */}
