@@ -12,6 +12,7 @@ import VehicleSelector from "@/components/VehicleSelector";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { z } from "zod";
 import { supabase } from "@/integrations/supabase/client";
+import { US_STATES } from "@/data/usStates";
 
 const parkingFormSchema = z.object({
   firstName: z.string().trim().min(1, "First name is required").max(50, "First name must be less than 50 characters"),
@@ -23,6 +24,7 @@ const parkingFormSchema = z.object({
   vehicleYear: z.string().trim().min(1, "Vehicle year is required"),
   vehicleColor: z.string().trim().min(1, "Vehicle color is required").max(30, "Vehicle color must be less than 30 characters"),
   licensePlate: z.string().trim().min(1, "License plate is required").max(15, "License plate must be less than 15 characters"),
+  licensePlateState: z.string().min(1, "License plate state is required"),
   pickupLocation: z.string().min(1, "Pickup location is required"),
   serviceType: z.enum(["single", "monthly", "semester"]),
   specialInstructions: z.string().max(500, "Special instructions must be less than 500 characters").optional(),
@@ -63,6 +65,7 @@ const ParkingForm = () => {
         vehicle_model: validatedData.vehicleModel,
         vehicle_color: validatedData.vehicleColor,
         license_plate: validatedData.licensePlate,
+        license_plate_state: validatedData.licensePlateState,
         pickup_location: validatedData.pickupLocation,
         service_type: validatedData.serviceType,
         special_instructions: validatedData.specialInstructions || null,
@@ -228,6 +231,23 @@ const ParkingForm = () => {
                       className={errors.licensePlate ? "border-destructive" : ""}
                     />
                     {errors.licensePlate && <p className="text-sm text-destructive">{errors.licensePlate}</p>}
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="licensePlateState">Plate State *</Label>
+                    <Select
+                      value={formData.licensePlateState || ""}
+                      onValueChange={(value) => handleInputChange("licensePlateState", value)}
+                    >
+                      <SelectTrigger className={errors.licensePlateState ? "border-destructive" : ""}>
+                        <SelectValue placeholder="Select state" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {US_STATES.map((s) => (
+                          <SelectItem key={s.value} value={s.value}>{s.label}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    {errors.licensePlateState && <p className="text-sm text-destructive">{errors.licensePlateState}</p>}
                   </div>
                 </div>
               </div>

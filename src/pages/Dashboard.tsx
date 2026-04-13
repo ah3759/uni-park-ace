@@ -14,6 +14,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, Dialog
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { LogOut, Car, Search, Clock, CheckCircle, XCircle, PlayCircle, AlertCircle, MessageSquare, RefreshCw, Shield, ClipboardCheck, Plus, Pencil, Trash2 } from "lucide-react";
 import InspectionWorkflow from "@/components/inspection/InspectionWorkflow";
+import { US_STATES } from "@/data/usStates";
 
 type RequestStatus = "pending" | "confirmed" | "in_progress" | "completed" | "cancelled";
 
@@ -70,6 +71,7 @@ const emptyForm = {
   vehicle_model: "",
   vehicle_color: "",
   license_plate: "",
+  license_plate_state: "",
   pickup_location: "",
   service_type: "single",
   special_instructions: "",
@@ -204,6 +206,7 @@ const Dashboard = () => {
       vehicle_model: req.vehicle_model,
       vehicle_color: req.vehicle_color,
       license_plate: req.license_plate,
+      license_plate_state: (req as any).license_plate_state || "",
       pickup_location: req.pickup_location,
       service_type: req.service_type,
       special_instructions: req.special_instructions || "",
@@ -619,9 +622,24 @@ const Dashboard = () => {
                 <Input value={formData.vehicle_color} onChange={e => handleFormChange("vehicle_color", e.target.value)} placeholder="Black" />
               </div>
             </div>
-            <div className="space-y-1">
-              <Label>License Plate *</Label>
-              <Input value={formData.license_plate} onChange={e => handleFormChange("license_plate", e.target.value)} />
+            <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-1">
+                <Label>License Plate *</Label>
+                <Input value={formData.license_plate} onChange={e => handleFormChange("license_plate", e.target.value)} />
+              </div>
+              <div className="space-y-1">
+                <Label>Plate State</Label>
+                <Select value={formData.license_plate_state} onValueChange={v => handleFormChange("license_plate_state", v)}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select state" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {US_STATES.map((s) => (
+                      <SelectItem key={s.value} value={s.value}>{s.label}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1">

@@ -9,6 +9,7 @@ import { toast } from "@/components/ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { Car, Plus } from "lucide-react";
 import VehicleSelector from "@/components/VehicleSelector";
+import { US_STATES } from "@/data/usStates";
 
 interface CustomerNewRequestProps {
   userEmail: string;
@@ -26,6 +27,7 @@ const CustomerNewRequest = ({ userEmail, onSuccess }: CustomerNewRequestProps) =
     vehicle_year: "",
     vehicle_color: "",
     license_plate: "",
+    license_plate_state: "",
     pickup_location: "",
     service_type: "single",
     special_instructions: "",
@@ -38,7 +40,7 @@ const CustomerNewRequest = ({ userEmail, onSuccess }: CustomerNewRequestProps) =
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const required = ["first_name", "last_name", "phone", "vehicle_make", "vehicle_model", "vehicle_year", "vehicle_color", "license_plate", "pickup_location"];
+    const required = ["first_name", "last_name", "phone", "vehicle_make", "vehicle_model", "vehicle_year", "vehicle_color", "license_plate", "license_plate_state", "pickup_location"];
     const missing = required.filter((k) => !form[k as keyof typeof form]);
     if (missing.length) {
       toast({ title: "Please fill in all required fields", variant: "destructive" });
@@ -55,6 +57,7 @@ const CustomerNewRequest = ({ userEmail, onSuccess }: CustomerNewRequestProps) =
       vehicle_model: form.vehicle_model,
       vehicle_color: form.vehicle_color,
       license_plate: form.license_plate,
+      license_plate_state: form.license_plate_state,
       pickup_location: form.pickup_location,
       service_type: form.service_type,
       special_instructions: form.special_instructions || null,
@@ -69,7 +72,7 @@ const CustomerNewRequest = ({ userEmail, onSuccess }: CustomerNewRequestProps) =
       setForm({
         first_name: "", last_name: "", phone: "",
         vehicle_make: "", vehicle_model: "", vehicle_year: "", vehicle_color: "",
-        license_plate: "", pickup_location: "", service_type: "single",
+        license_plate: "", license_plate_state: "", pickup_location: "", service_type: "single",
         special_instructions: "",
       });
       onSuccess();
@@ -126,6 +129,17 @@ const CustomerNewRequest = ({ userEmail, onSuccess }: CustomerNewRequestProps) =
               <div className="space-y-1.5">
                 <Label htmlFor="cr-plate">License Plate *</Label>
                 <Input id="cr-plate" value={form.license_plate} onChange={(e) => update("license_plate", e.target.value)} placeholder="e.g. ABC-1234" />
+              </div>
+              <div className="space-y-1.5">
+                <Label htmlFor="cr-plate-state">Plate State *</Label>
+                <Select value={form.license_plate_state} onValueChange={(v) => update("license_plate_state", v)}>
+                  <SelectTrigger><SelectValue placeholder="Select state" /></SelectTrigger>
+                  <SelectContent>
+                    {US_STATES.map((s) => (
+                      <SelectItem key={s.value} value={s.value}>{s.label}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
             </div>
           </div>
