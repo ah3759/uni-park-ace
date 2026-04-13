@@ -142,6 +142,7 @@ const CustomerNewRequest = ({ userEmail, onSuccess }: CustomerNewRequestProps) =
                 </Select>
               </div>
             </div>
+          </div>
 
           {/* Location & Service */}
           <div className="grid sm:grid-cols-2 gap-4">
