@@ -71,6 +71,7 @@ const emptyForm = {
   vehicle_model: "",
   vehicle_color: "",
   license_plate: "",
+  license_plate_state: "",
   pickup_location: "",
   service_type: "single",
   special_instructions: "",

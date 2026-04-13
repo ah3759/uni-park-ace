@@ -35,6 +35,7 @@ const CustomerScheduling = () => {
     vehicle_year: "",
     vehicle_color: "",
     license_plate: "",
+    license_plate_state: "",
     pickup_location: "",
     scheduled_time: "",
     special_instructions: "",
@@ -49,7 +50,7 @@ const CustomerScheduling = () => {
     const required = [
       "customer_name", "customer_email", "customer_phone",
       "vehicle_make", "vehicle_model", "vehicle_year", "vehicle_color",
-      "license_plate", "pickup_location", "scheduled_time",
+      "license_plate", "license_plate_state", "pickup_location", "scheduled_time",
     ];
     const missing = required.filter((k) => !form[k as keyof typeof form]);
     if (missing.length || !date) {
@@ -66,6 +67,7 @@ const CustomerScheduling = () => {
       vehicle_model: form.vehicle_model,
       vehicle_color: form.vehicle_color,
       license_plate: form.license_plate,
+      license_plate_state: form.license_plate_state,
       pickup_location: form.pickup_location,
       scheduled_date: format(date, "yyyy-MM-dd"),
       scheduled_time: form.scheduled_time,
@@ -80,7 +82,7 @@ const CustomerScheduling = () => {
       setForm({
         customer_name: "", customer_email: "", customer_phone: "",
         vehicle_make: "", vehicle_model: "", vehicle_year: "", vehicle_color: "",
-        license_plate: "", pickup_location: "", scheduled_time: "",
+        license_plate: "", license_plate_state: "", pickup_location: "", scheduled_time: "",
         special_instructions: "",
       });
       setDate(undefined);
@@ -202,8 +204,17 @@ const CustomerScheduling = () => {
                     <Label>License Plate *</Label>
                     <Input value={form.license_plate} onChange={(e) => update("license_plate", e.target.value)} placeholder="e.g. ABC-1234" />
                   </div>
-                </div>
-              </div>
+                  <div className="space-y-1.5">
+                    <Label>Plate State *</Label>
+                    <Select value={form.license_plate_state} onValueChange={(v) => update("license_plate_state", v)}>
+                      <SelectTrigger><SelectValue placeholder="Select state" /></SelectTrigger>
+                      <SelectContent>
+                        {US_STATES.map((s) => (
+                          <SelectItem key={s.value} value={s.value}>{s.label}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
 
               {/* Location */}
               <div className="space-y-1.5">

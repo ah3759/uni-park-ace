@@ -32,6 +32,7 @@ const BusinessBooking = () => {
     vehicle_year: "",
     vehicle_color: "",
     license_plate: "",
+    license_plate_state: "",
     additional_details: "",
   });
 
@@ -100,6 +101,7 @@ const BusinessBooking = () => {
         contact_phone: "", event_type: "", expected_guests: "",
         venue_location: "", vehicle_make: "", vehicle_model: "",
         vehicle_year: "", vehicle_color: "", license_plate: "",
+        license_plate_state: "",
         additional_details: "",
       });
       setEventDate(undefined);
@@ -296,8 +298,17 @@ const BusinessBooking = () => {
                     <Label>License Plate</Label>
                     <Input value={form.license_plate} onChange={(e) => update("license_plate", e.target.value)} placeholder="e.g. ABC-1234" />
                   </div>
-                </div>
-              </div>
+                  <div className="space-y-1.5">
+                    <Label>Plate State</Label>
+                    <Select value={form.license_plate_state} onValueChange={(v) => update("license_plate_state", v)}>
+                      <SelectTrigger><SelectValue placeholder="Select state" /></SelectTrigger>
+                      <SelectContent>
+                        {US_STATES.map((s) => (
+                          <SelectItem key={s.value} value={s.value}>{s.label}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
 
               {/* Additional Details */}
               <div className="space-y-1.5">
