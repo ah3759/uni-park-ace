@@ -93,6 +93,10 @@ const Dashboard = () => {
   const [formData, setFormData] = useState(emptyForm);
   const [formSubmitting, setFormSubmitting] = useState(false);
 
+  // Delete confirmation state
+  const [deleteConfirmCode, setDeleteConfirmCode] = useState("");
+  const DELETE_CODE = "8888";
+
   useEffect(() => {
     if (!authLoading && (!user || !isEmployee)) {
       navigate("/login");
