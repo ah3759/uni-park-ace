@@ -12,6 +12,7 @@ import VehicleSelector from "@/components/VehicleSelector";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { z } from "zod";
 import { supabase } from "@/integrations/supabase/client";
+import { US_STATES } from "@/data/usStates";
 
 const parkingFormSchema = z.object({
   firstName: z.string().trim().min(1, "First name is required").max(50, "First name must be less than 50 characters"),

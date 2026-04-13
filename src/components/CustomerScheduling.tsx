@@ -13,6 +13,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { toast } from "@/components/ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import VehicleSelector from "@/components/VehicleSelector";
+import { US_STATES } from "@/data/usStates";
 
 const timeSlots = [
   "07:00", "07:30", "08:00", "08:30", "09:00", "09:30",

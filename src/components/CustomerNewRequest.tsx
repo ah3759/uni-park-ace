@@ -9,6 +9,7 @@ import { toast } from "@/components/ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { Car, Plus } from "lucide-react";
 import VehicleSelector from "@/components/VehicleSelector";
+import { US_STATES } from "@/data/usStates";
 
 interface CustomerNewRequestProps {
   userEmail: string;
