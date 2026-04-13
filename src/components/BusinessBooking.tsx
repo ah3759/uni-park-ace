@@ -309,6 +309,8 @@ const BusinessBooking = () => {
                       </SelectContent>
                     </Select>
                   </div>
+                </div>
+              </div>
 
               {/* Additional Details */}
               <div className="space-y-1.5">

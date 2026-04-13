@@ -215,6 +215,8 @@ const CustomerScheduling = () => {
                       </SelectContent>
                     </Select>
                   </div>
+                </div>
+              </div>
 
               {/* Location */}
               <div className="space-y-1.5">
