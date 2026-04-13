@@ -136,6 +136,9 @@ const Dashboard = () => {
   }, [user, isEmployee]);
 
   const updateStatus = async (id: string, status: RequestStatus) => {
+    // Find the request to get customer info for SMS
+    const request = requests.find(r => r.id === id);
+
     const { error } = await supabase
       .from("parking_requests")
       .update({ status })
@@ -147,6 +150,21 @@ const Dashboard = () => {
       toast({ title: `Status updated to ${statusConfig[status].label}` });
       if (selectedRequest?.id === id) {
         setSelectedRequest(prev => prev ? { ...prev, status } : null);
+      }
+
+      // Send SMS notification for status changes
+      if (request?.phone && ["confirmed", "in_progress", "completed", "cancelled"].includes(status)) {
+        try {
+          await supabase.functions.invoke("send-sms-status", {
+            body: {
+              phone: request.phone,
+              firstName: request.first_name,
+              status,
+            },
+          });
+        } catch (smsErr) {
+          console.error("Failed to send SMS notification:", smsErr);
+        }
       }
     }
   };
