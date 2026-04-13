@@ -26,6 +26,7 @@ const parkingFormSchema = z.object({
   licensePlate: z.string().trim().min(1, "License plate is required").max(15, "License plate must be less than 15 characters"),
   licensePlateState: z.string().min(1, "License plate state is required"),
   pickupLocation: z.string().min(1, "Pickup location is required"),
+  serviceType: z.enum(["single", "monthly", "semester"]),
   specialInstructions: z.string().max(500, "Special instructions must be less than 500 characters").optional(),
   agreeToTerms: z.boolean().refine(val => val === true, "You must agree to the terms"),
 });
