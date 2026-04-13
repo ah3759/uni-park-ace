@@ -3,14 +3,16 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
 import { toast } from "@/components/ui/use-toast";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { LogOut, Car, Search, Clock, CheckCircle, XCircle, PlayCircle, AlertCircle, MessageSquare, RefreshCw, Shield, ClipboardCheck } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
+import { LogOut, Car, Search, Clock, CheckCircle, XCircle, PlayCircle, AlertCircle, MessageSquare, RefreshCw, Shield, ClipboardCheck, Plus, Pencil, Trash2 } from "lucide-react";
 import InspectionWorkflow from "@/components/inspection/InspectionWorkflow";
 
 type RequestStatus = "pending" | "confirmed" | "in_progress" | "completed" | "cancelled";
@@ -59,6 +61,20 @@ const locationLabels: Record<string, string> = {
   "global-village": "Global Village Bus Stop",
 };
 
+const emptyForm = {
+  first_name: "",
+  last_name: "",
+  email: "",
+  phone: "",
+  vehicle_make: "",
+  vehicle_model: "",
+  vehicle_color: "",
+  license_plate: "",
+  pickup_location: "",
+  service_type: "single",
+  special_instructions: "",
+};
+
 const Dashboard = () => {
   const { user, loading: authLoading, isEmployee, isAdmin, signOut } = useAuth();
   const navigate = useNavigate();
@@ -70,6 +86,12 @@ const Dashboard = () => {
   const [inspectingRequest, setInspectingRequest] = useState<ParkingRequest | null>(null);
   const [notes, setNotes] = useState<RequestNote[]>([]);
   const [newNote, setNewNote] = useState("");
+
+  // Create / Edit form state
+  const [formOpen, setFormOpen] = useState(false);
+  const [editingRequest, setEditingRequest] = useState<ParkingRequest | null>(null);
+  const [formData, setFormData] = useState(emptyForm);
+  const [formSubmitting, setFormSubmitting] = useState(false);
 
   useEffect(() => {
     if (!authLoading && (!user || !isEmployee)) {
@@ -158,6 +180,87 @@ const Dashboard = () => {
   const openDetail = (req: ParkingRequest) => {
     setSelectedRequest(req);
     fetchNotes(req.id);
+  };
+
+  // Create / Edit handlers
+  const openCreateForm = () => {
+    setEditingRequest(null);
+    setFormData(emptyForm);
+    setFormOpen(true);
+  };
+
+  const openEditForm = (req: ParkingRequest) => {
+    setEditingRequest(req);
+    setFormData({
+      first_name: req.first_name,
+      last_name: req.last_name,
+      email: req.email,
+      phone: req.phone,
+      vehicle_make: req.vehicle_make,
+      vehicle_model: req.vehicle_model,
+      vehicle_color: req.vehicle_color,
+      license_plate: req.license_plate,
+      pickup_location: req.pickup_location,
+      service_type: req.service_type,
+      special_instructions: req.special_instructions || "",
+    });
+    setFormOpen(true);
+  };
+
+  const handleFormChange = (field: string, value: string) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+  };
+
+  const handleFormSubmit = async () => {
+    if (!formData.first_name || !formData.last_name || !formData.email || !formData.phone || !formData.vehicle_make || !formData.vehicle_model || !formData.vehicle_color || !formData.license_plate || !formData.pickup_location) {
+      toast({ title: "Please fill all required fields", variant: "destructive" });
+      return;
+    }
+
+    setFormSubmitting(true);
+    const payload = {
+      ...formData,
+      special_instructions: formData.special_instructions || null,
+    };
+
+    if (editingRequest) {
+      const { error } = await supabase
+        .from("parking_requests")
+        .update(payload)
+        .eq("id", editingRequest.id);
+
+      if (error) {
+        toast({ title: "Error updating request", description: error.message, variant: "destructive" });
+      } else {
+        toast({ title: "Request updated successfully" });
+        setFormOpen(false);
+      }
+    } else {
+      const { error } = await supabase
+        .from("parking_requests")
+        .insert(payload);
+
+      if (error) {
+        toast({ title: "Error creating request", description: error.message, variant: "destructive" });
+      } else {
+        toast({ title: "Request created successfully" });
+        setFormOpen(false);
+      }
+    }
+    setFormSubmitting(false);
+  };
+
+  const deleteRequest = async (id: string) => {
+    const { error } = await supabase
+      .from("parking_requests")
+      .delete()
+      .eq("id", id);
+
+    if (error) {
+      toast({ title: "Error deleting request", description: error.message, variant: "destructive" });
+    } else {
+      toast({ title: "Request deleted" });
+    }
   };
 
   const filtered = requests.filter(r => {
@@ -249,6 +352,9 @@ const Dashboard = () => {
           <Button variant="outline" size="icon" onClick={fetchRequests}>
             <RefreshCw className="w-4 h-4" />
           </Button>
+          <Button onClick={openCreateForm}>
+            <Plus className="w-4 h-4 mr-1" /> New Request
+          </Button>
         </div>
 
         {/* Request Table */}
@@ -316,6 +422,9 @@ const Dashboard = () => {
                               </DialogContent>
                             </Dialog>
                           )}
+                          <Button variant="outline" size="sm" onClick={() => openEditForm(req)}>
+                            <Pencil className="w-4 h-4" />
+                          </Button>
                           <Dialog>
                             <DialogTrigger asChild>
                               <Button variant="outline" size="sm" onClick={() => openDetail(req)}>
@@ -331,13 +440,11 @@ const Dashboard = () => {
                                     </DialogTitle>
                                   </DialogHeader>
                                   <div className="space-y-4 text-sm">
-                                    {/* Contact */}
                                     <div>
                                       <h4 className="font-medium text-foreground mb-1">Contact Info</h4>
                                       <p className="text-muted-foreground">{selectedRequest.email}</p>
                                       <p className="text-muted-foreground">{selectedRequest.phone}</p>
                                     </div>
-                                    {/* Vehicle */}
                                     <div>
                                       <h4 className="font-medium text-foreground mb-1">Vehicle</h4>
                                       <p className="text-muted-foreground">
@@ -345,7 +452,6 @@ const Dashboard = () => {
                                       </p>
                                       <p className="text-muted-foreground font-mono">{selectedRequest.license_plate}</p>
                                     </div>
-                                    {/* Location & Service */}
                                     <div className="grid grid-cols-2 gap-4">
                                       <div>
                                         <h4 className="font-medium text-foreground mb-1">Pickup Location</h4>
@@ -358,19 +464,16 @@ const Dashboard = () => {
                                         <p className="text-muted-foreground capitalize">{selectedRequest.service_type}</p>
                                       </div>
                                     </div>
-                                    {/* Special Instructions */}
                                     {selectedRequest.special_instructions && (
                                       <div>
                                         <h4 className="font-medium text-foreground mb-1">Special Instructions</h4>
                                         <p className="text-muted-foreground">{selectedRequest.special_instructions}</p>
                                       </div>
                                     )}
-                                    {/* Timestamp */}
                                     <div>
                                       <h4 className="font-medium text-foreground mb-1">Submitted</h4>
                                       <p className="text-muted-foreground">{new Date(selectedRequest.created_at).toLocaleString()}</p>
                                     </div>
-                                    {/* Status Update */}
                                     <div>
                                       <h4 className="font-medium text-foreground mb-2">Update Status</h4>
                                       <div className="flex flex-wrap gap-2">
@@ -387,7 +490,6 @@ const Dashboard = () => {
                                         ))}
                                       </div>
                                     </div>
-                                    {/* Notes */}
                                     <div>
                                       <h4 className="font-medium text-foreground mb-2 flex items-center gap-1">
                                         <MessageSquare className="w-4 h-4" /> Internal Notes
@@ -421,6 +523,27 @@ const Dashboard = () => {
                               )}
                             </DialogContent>
                           </Dialog>
+                          <AlertDialog>
+                            <AlertDialogTrigger asChild>
+                              <Button variant="outline" size="sm" className="text-destructive hover:text-destructive">
+                                <Trash2 className="w-4 h-4" />
+                              </Button>
+                            </AlertDialogTrigger>
+                            <AlertDialogContent>
+                              <AlertDialogHeader>
+                                <AlertDialogTitle>Delete Request</AlertDialogTitle>
+                                <AlertDialogDescription>
+                                  Are you sure you want to delete the request for {req.first_name} {req.last_name}? This action cannot be undone.
+                                </AlertDialogDescription>
+                              </AlertDialogHeader>
+                              <AlertDialogFooter>
+                                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                <AlertDialogAction onClick={() => deleteRequest(req.id)} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+                                  Delete
+                                </AlertDialogAction>
+                              </AlertDialogFooter>
+                            </AlertDialogContent>
+                          </AlertDialog>
                         </div>
                       </td>
                     </tr>
@@ -431,6 +554,94 @@ const Dashboard = () => {
           </div>
         )}
       </main>
+
+      {/* Create / Edit Dialog */}
+      <Dialog open={formOpen} onOpenChange={setFormOpen}>
+        <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="font-display">
+              {editingRequest ? "Edit Request" : "New Valet Request"}
+            </DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-1">
+                <Label>First Name *</Label>
+                <Input value={formData.first_name} onChange={e => handleFormChange("first_name", e.target.value)} />
+              </div>
+              <div className="space-y-1">
+                <Label>Last Name *</Label>
+                <Input value={formData.last_name} onChange={e => handleFormChange("last_name", e.target.value)} />
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-1">
+                <Label>Email *</Label>
+                <Input type="email" value={formData.email} onChange={e => handleFormChange("email", e.target.value)} />
+              </div>
+              <div className="space-y-1">
+                <Label>Phone *</Label>
+                <Input value={formData.phone} onChange={e => handleFormChange("phone", e.target.value)} />
+              </div>
+            </div>
+            <div className="grid grid-cols-3 gap-3">
+              <div className="space-y-1">
+                <Label>Make *</Label>
+                <Input value={formData.vehicle_make} onChange={e => handleFormChange("vehicle_make", e.target.value)} placeholder="Toyota" />
+              </div>
+              <div className="space-y-1">
+                <Label>Model *</Label>
+                <Input value={formData.vehicle_model} onChange={e => handleFormChange("vehicle_model", e.target.value)} placeholder="Camry" />
+              </div>
+              <div className="space-y-1">
+                <Label>Color *</Label>
+                <Input value={formData.vehicle_color} onChange={e => handleFormChange("vehicle_color", e.target.value)} placeholder="Black" />
+              </div>
+            </div>
+            <div className="space-y-1">
+              <Label>License Plate *</Label>
+              <Input value={formData.license_plate} onChange={e => handleFormChange("license_plate", e.target.value)} />
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-1">
+                <Label>Pickup Location *</Label>
+                <Select value={formData.pickup_location} onValueChange={v => handleFormChange("pickup_location", v)}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select location" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {Object.entries(locationLabels).map(([k, v]) => (
+                      <SelectItem key={k} value={k}>{v}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-1">
+                <Label>Service Type</Label>
+                <Select value={formData.service_type} onValueChange={v => handleFormChange("service_type", v)}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="single">Single</SelectItem>
+                    <SelectItem value="round-trip">Round Trip</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+            <div className="space-y-1">
+              <Label>Special Instructions</Label>
+              <Textarea value={formData.special_instructions} onChange={e => handleFormChange("special_instructions", e.target.value)} placeholder="Any special notes..." />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setFormOpen(false)}>Cancel</Button>
+            <Button onClick={handleFormSubmit} disabled={formSubmitting}>
+              {formSubmitting ? "Saving..." : editingRequest ? "Save Changes" : "Create Request"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
