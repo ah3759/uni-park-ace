@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -34,6 +35,7 @@ const parkingFormSchema = z.object({
 type ParkingFormData = z.infer<typeof parkingFormSchema>;
 
 const ParkingForm = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState<Partial<ParkingFormData>>({
     serviceType: "single",
     agreeToTerms: false,
@@ -56,7 +58,7 @@ const ParkingForm = () => {
     try {
       const validatedData = parkingFormSchema.parse(formData);
 
-      const { error: dbError } = await supabase.from("parking_requests").insert({
+      const { data, error: dbError } = await supabase.from("parking_requests").insert({
         first_name: validatedData.firstName,
         last_name: validatedData.lastName,
         email: validatedData.email,
@@ -69,19 +71,17 @@ const ParkingForm = () => {
         pickup_location: validatedData.pickupLocation,
         service_type: validatedData.serviceType,
         special_instructions: validatedData.specialInstructions || null,
-      });
+      }).select("id").single();
 
       if (dbError) throw dbError;
 
       toast({
         title: "Parking Request Submitted!",
-        description: "We'll send you a confirmation email shortly.",
+        description: "Redirecting you to your queue status...",
       });
 
-      setFormData({
-        serviceType: "single",
-        agreeToTerms: false,
-      });
+      // Redirect to queue status page
+      navigate(`/queue/${data.id}`);
     } catch (error) {
       if (error instanceof z.ZodError) {
         const newErrors: Record<string, string> = {};
