@@ -11,6 +11,7 @@ const STATUS_MESSAGES: Record<string, string> = {
   in_progress: "Your vehicle is now being handled by our valet team. We'll notify you when it's ready! 🅿️",
   completed: "Your vehicle is ready for pickup! Please head to your designated location. ✅",
   cancelled: "Your valet request has been cancelled. If this was a mistake, please contact us.",
+  queue_link: "You're checked in! Track your queue position here:",
 };
 
 Deno.serve(async (req) => {
@@ -25,7 +26,7 @@ Deno.serve(async (req) => {
     const TWILIO_API_KEY = Deno.env.get("TWILIO_API_KEY");
     if (!TWILIO_API_KEY) throw new Error("TWILIO_API_KEY is not configured");
 
-    const { phone, firstName, status } = await req.json();
+    const { phone, firstName, status, queueUrl } = await req.json();
 
     if (!phone || !firstName || !status) {
       return new Response(
@@ -42,7 +43,11 @@ Deno.serve(async (req) => {
       );
     }
 
-    const body = `Hi ${firstName}! ${messageTemplate} — UniVale Valet`;
+    let body = `Hi ${firstName}! ${messageTemplate}`;
+    if (status === "queue_link" && queueUrl) {
+      body += ` ${queueUrl}`;
+    }
+    body += " — UniVale Valet";
 
     const response = await fetch(`${GATEWAY_URL}/Messages.json`, {
       method: "POST",
