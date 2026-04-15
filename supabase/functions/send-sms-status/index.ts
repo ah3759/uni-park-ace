@@ -35,6 +35,14 @@ Deno.serve(async (req) => {
       );
     }
 
+    // Ensure E.164 format (add +1 for US numbers if missing)
+    let formattedPhone = phone.replace(/\D/g, "");
+    if (formattedPhone.length === 10) {
+      formattedPhone = `+1${formattedPhone}`;
+    } else if (!formattedPhone.startsWith("+")) {
+      formattedPhone = `+${formattedPhone}`;
+    }
+
     const messageTemplate = STATUS_MESSAGES[status];
     if (!messageTemplate) {
       return new Response(
@@ -57,7 +65,7 @@ Deno.serve(async (req) => {
         "Content-Type": "application/x-www-form-urlencoded",
       },
       body: new URLSearchParams({
-        To: phone,
+        To: formattedPhone,
         From: TWILIO_FROM_NUMBER,
         Body: body,
       }),
