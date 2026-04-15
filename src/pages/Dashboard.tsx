@@ -12,8 +12,9 @@ import { Label } from "@/components/ui/label";
 import { toast } from "@/components/ui/use-toast";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
-import { LogOut, Car, Search, Clock, CheckCircle, XCircle, PlayCircle, AlertCircle, MessageSquare, RefreshCw, Shield, ClipboardCheck, Plus, Pencil, Trash2 } from "lucide-react";
+import { LogOut, Car, Search, Clock, CheckCircle, XCircle, PlayCircle, AlertCircle, RefreshCw, Shield, ClipboardCheck, Plus, Pencil, Trash2 } from "lucide-react";
 import InspectionWorkflow from "@/components/inspection/InspectionWorkflow";
+import RequestDetailPanel from "@/components/dashboard/RequestDetailPanel";
 import { US_STATES } from "@/data/usStates";
 
 type RequestStatus = "pending" | "confirmed" | "in_progress" | "completed" | "cancelled";
@@ -37,12 +38,6 @@ interface ParkingRequest {
   updated_at: string;
 }
 
-interface RequestNote {
-  id: string;
-  content: string;
-  created_at: string;
-  author_id: string;
-}
 
 const statusConfig: Record<RequestStatus, { label: string; icon: typeof Clock; className: string }> = {
   pending: { label: "Pending", icon: Clock, className: "bg-yellow-500/10 text-yellow-600 border-yellow-500/20" },
@@ -84,10 +79,9 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
-  const [selectedRequest, setSelectedRequest] = useState<ParkingRequest | null>(null);
+  
   const [inspectingRequest, setInspectingRequest] = useState<ParkingRequest | null>(null);
-  const [notes, setNotes] = useState<RequestNote[]>([]);
-  const [newNote, setNewNote] = useState("");
+  const [detailRequest, setDetailRequest] = useState<ParkingRequest | null>(null);
 
   // Create / Edit form state
   const [formOpen, setFormOpen] = useState(false);
@@ -148,9 +142,6 @@ const Dashboard = () => {
       toast({ title: "Error updating status", description: error.message, variant: "destructive" });
     } else {
       toast({ title: `Status updated to ${statusConfig[status].label}` });
-      if (selectedRequest?.id === id) {
-        setSelectedRequest(prev => prev ? { ...prev, status } : null);
-      }
 
       // Send SMS notification for status changes
       if (request?.phone && ["confirmed", "in_progress", "completed", "cancelled"].includes(status)) {
@@ -169,41 +160,8 @@ const Dashboard = () => {
     }
   };
 
-  const fetchNotes = async (requestId: string) => {
-    const { data } = await supabase
-      .from("request_notes")
-      .select("*")
-      .eq("request_id", requestId)
-      .order("created_at", { ascending: true });
-    setNotes((data as RequestNote[]) || []);
-  };
-
-  const addNote = async () => {
-    if (!newNote.trim() || !selectedRequest || !user) return;
-
-    const { data: profile } = await supabase
-      .from("profiles")
-      .select("id")
-      .eq("user_id", user.id)
-      .single();
-
-    if (!profile) return;
-
-    const { error } = await supabase
-      .from("request_notes")
-      .insert({ request_id: selectedRequest.id, author_id: profile.id, content: newNote.trim() });
-
-    if (error) {
-      toast({ title: "Error adding note", description: error.message, variant: "destructive" });
-    } else {
-      setNewNote("");
-      fetchNotes(selectedRequest.id);
-    }
-  };
-
   const openDetail = (req: ParkingRequest) => {
-    setSelectedRequest(req);
-    fetchNotes(req.id);
+    setDetailRequest(req);
   };
 
   // Create / Edit handlers
@@ -450,104 +408,9 @@ const Dashboard = () => {
                           <Button variant="outline" size="sm" onClick={() => openEditForm(req)}>
                             <Pencil className="w-4 h-4" />
                           </Button>
-                          <Dialog>
-                            <DialogTrigger asChild>
-                              <Button variant="outline" size="sm" onClick={() => openDetail(req)}>
-                                View
-                              </Button>
-                            </DialogTrigger>
-                            <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
-                              {selectedRequest && selectedRequest.id === req.id && (
-                                <>
-                                  <DialogHeader>
-                                    <DialogTitle className="font-display">
-                                      {selectedRequest.first_name} {selectedRequest.last_name}
-                                    </DialogTitle>
-                                  </DialogHeader>
-                                  <div className="space-y-4 text-sm">
-                                    <div>
-                                      <h4 className="font-medium text-foreground mb-1">Contact Info</h4>
-                                      <p className="text-muted-foreground">{selectedRequest.email}</p>
-                                      <p className="text-muted-foreground">{selectedRequest.phone}</p>
-                                    </div>
-                                    <div>
-                                      <h4 className="font-medium text-foreground mb-1">Vehicle</h4>
-                                      <p className="text-muted-foreground">
-                                        {selectedRequest.vehicle_color} {selectedRequest.vehicle_make} {selectedRequest.vehicle_model}
-                                      </p>
-                                      <p className="text-muted-foreground font-mono">{selectedRequest.license_plate}</p>
-                                    </div>
-                                    <div className="grid grid-cols-2 gap-4">
-                                      <div>
-                                        <h4 className="font-medium text-foreground mb-1">Pickup Location</h4>
-                                        <p className="text-muted-foreground">
-                                          {locationLabels[selectedRequest.pickup_location] || selectedRequest.pickup_location}
-                                        </p>
-                                      </div>
-                                      <div>
-                                        <h4 className="font-medium text-foreground mb-1">Service Type</h4>
-                                        <p className="text-muted-foreground capitalize">{selectedRequest.service_type}</p>
-                                      </div>
-                                    </div>
-                                    {selectedRequest.special_instructions && (
-                                      <div>
-                                        <h4 className="font-medium text-foreground mb-1">Special Instructions</h4>
-                                        <p className="text-muted-foreground">{selectedRequest.special_instructions}</p>
-                                      </div>
-                                    )}
-                                    <div>
-                                      <h4 className="font-medium text-foreground mb-1">Submitted</h4>
-                                      <p className="text-muted-foreground">{new Date(selectedRequest.created_at).toLocaleString()}</p>
-                                    </div>
-                                    <div>
-                                      <h4 className="font-medium text-foreground mb-2">Update Status</h4>
-                                      <div className="flex flex-wrap gap-2">
-                                        {(Object.keys(statusConfig) as RequestStatus[]).map(s => (
-                                          <Button
-                                            key={s}
-                                            variant={selectedRequest.status === s ? "default" : "outline"}
-                                            size="sm"
-                                            onClick={() => updateStatus(selectedRequest.id, s)}
-                                            className="text-xs"
-                                          >
-                                            {statusConfig[s].label}
-                                          </Button>
-                                        ))}
-                                      </div>
-                                    </div>
-                                    <div>
-                                      <h4 className="font-medium text-foreground mb-2 flex items-center gap-1">
-                                        <MessageSquare className="w-4 h-4" /> Internal Notes
-                                      </h4>
-                                      <div className="space-y-2 mb-3 max-h-40 overflow-y-auto">
-                                        {notes.length === 0 ? (
-                                          <p className="text-muted-foreground text-xs">No notes yet</p>
-                                        ) : (
-                                          notes.map(n => (
-                                            <div key={n.id} className="p-2 bg-muted/50 rounded text-xs">
-                                              <p className="text-foreground">{n.content}</p>
-                                              <p className="text-muted-foreground mt-1">{new Date(n.created_at).toLocaleString()}</p>
-                                            </div>
-                                          ))
-                                        )}
-                                      </div>
-                                      <div className="flex gap-2">
-                                        <Textarea
-                                          placeholder="Add a note..."
-                                          value={newNote}
-                                          onChange={(e) => setNewNote(e.target.value)}
-                                          className="min-h-[60px] text-sm"
-                                        />
-                                        <Button size="sm" onClick={addNote} disabled={!newNote.trim()}>
-                                          Add
-                                        </Button>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </>
-                              )}
-                            </DialogContent>
-                          </Dialog>
+                          <Button variant="outline" size="sm" onClick={() => openDetail(req)}>
+                            View
+                          </Button>
                           <AlertDialog onOpenChange={() => setDeleteConfirmCode("")}>
                             <AlertDialogTrigger asChild>
                               <Button variant="outline" size="sm" className="text-destructive hover:text-destructive">
@@ -699,6 +562,19 @@ const Dashboard = () => {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* Detail Panel */}
+      {detailRequest && user && (
+        <RequestDetailPanel
+          request={detailRequest}
+          userId={user.id}
+          onClose={() => setDetailRequest(null)}
+          onStatusChange={(id, status) => {
+            updateStatus(id, status);
+            setDetailRequest(prev => prev ? { ...prev, status } : null);
+          }}
+        />
+      )}
     </div>
   );
 };
