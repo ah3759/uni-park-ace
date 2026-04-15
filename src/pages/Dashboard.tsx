@@ -79,7 +79,7 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
-  const [selectedRequest, setSelectedRequest] = useState<ParkingRequest | null>(null);
+  
   const [inspectingRequest, setInspectingRequest] = useState<ParkingRequest | null>(null);
   const [detailRequest, setDetailRequest] = useState<ParkingRequest | null>(null);
 
@@ -142,9 +142,6 @@ const Dashboard = () => {
       toast({ title: "Error updating status", description: error.message, variant: "destructive" });
     } else {
       toast({ title: `Status updated to ${statusConfig[status].label}` });
-      if (selectedRequest?.id === id) {
-        setSelectedRequest(prev => prev ? { ...prev, status } : null);
-      }
 
       // Send SMS notification for status changes
       if (request?.phone && ["confirmed", "in_progress", "completed", "cancelled"].includes(status)) {
