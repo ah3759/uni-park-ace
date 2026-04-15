@@ -75,6 +75,21 @@ const ParkingForm = () => {
 
       if (dbError) throw dbError;
 
+      // Send SMS with queue link
+      const queueUrl = `${window.location.origin}/queue/${data.id}`;
+      try {
+        await supabase.functions.invoke("send-sms-status", {
+          body: {
+            phone: validatedData.phone,
+            firstName: validatedData.firstName,
+            status: "queue_link",
+            queueUrl,
+          },
+        });
+      } catch (smsError) {
+        console.error("Failed to send queue SMS:", smsError);
+      }
+
       toast({
         title: "Parking Request Submitted!",
         description: "Redirecting you to your queue status...",
