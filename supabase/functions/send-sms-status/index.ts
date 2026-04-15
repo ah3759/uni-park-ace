@@ -35,6 +35,14 @@ Deno.serve(async (req) => {
       );
     }
 
+    // Ensure E.164 format (add +1 for US numbers if missing)
+    let formattedPhone = phone.replace(/\D/g, "");
+    if (formattedPhone.length === 10) {
+      formattedPhone = `+1${formattedPhone}`;
+    } else if (!formattedPhone.startsWith("+")) {
+      formattedPhone = `+${formattedPhone}`;
+    }
+
     const messageTemplate = STATUS_MESSAGES[status];
     if (!messageTemplate) {
       return new Response(
