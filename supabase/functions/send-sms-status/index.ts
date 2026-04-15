@@ -65,7 +65,7 @@ Deno.serve(async (req) => {
         "Content-Type": "application/x-www-form-urlencoded",
       },
       body: new URLSearchParams({
-        To: phone,
+        To: formattedPhone,
         From: TWILIO_FROM_NUMBER,
         Body: body,
       }),
