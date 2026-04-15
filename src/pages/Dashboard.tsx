@@ -87,8 +87,7 @@ const Dashboard = () => {
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [selectedRequest, setSelectedRequest] = useState<ParkingRequest | null>(null);
   const [inspectingRequest, setInspectingRequest] = useState<ParkingRequest | null>(null);
-  const [notes, setNotes] = useState<RequestNote[]>([]);
-  const [newNote, setNewNote] = useState("");
+  const [detailRequest, setDetailRequest] = useState<ParkingRequest | null>(null);
 
   // Create / Edit form state
   const [formOpen, setFormOpen] = useState(false);
