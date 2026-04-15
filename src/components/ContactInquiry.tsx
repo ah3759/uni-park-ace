@@ -100,7 +100,7 @@ const ContactInquiry = () => {
               <div className="space-y-3 pt-2">
                 <div className="flex items-center gap-3 text-sm text-muted-foreground">
                   <Mail className="w-4 h-4 text-secondary" />
-                  <span>noreply@univale.app</span>
+                  <span>support@univale.app</span>
                 </div>
               </div>
             </div>
