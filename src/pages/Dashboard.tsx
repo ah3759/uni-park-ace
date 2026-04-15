@@ -169,41 +169,8 @@ const Dashboard = () => {
     }
   };
 
-  const fetchNotes = async (requestId: string) => {
-    const { data } = await supabase
-      .from("request_notes")
-      .select("*")
-      .eq("request_id", requestId)
-      .order("created_at", { ascending: true });
-    setNotes((data as RequestNote[]) || []);
-  };
-
-  const addNote = async () => {
-    if (!newNote.trim() || !selectedRequest || !user) return;
-
-    const { data: profile } = await supabase
-      .from("profiles")
-      .select("id")
-      .eq("user_id", user.id)
-      .single();
-
-    if (!profile) return;
-
-    const { error } = await supabase
-      .from("request_notes")
-      .insert({ request_id: selectedRequest.id, author_id: profile.id, content: newNote.trim() });
-
-    if (error) {
-      toast({ title: "Error adding note", description: error.message, variant: "destructive" });
-    } else {
-      setNewNote("");
-      fetchNotes(selectedRequest.id);
-    }
-  };
-
   const openDetail = (req: ParkingRequest) => {
-    setSelectedRequest(req);
-    fetchNotes(req.id);
+    setDetailRequest(req);
   };
 
   // Create / Edit handlers
