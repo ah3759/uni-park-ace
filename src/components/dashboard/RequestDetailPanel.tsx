@@ -349,12 +349,18 @@ const RequestDetailPanel = ({ request, userId, onClose, onStatusChange }: Props)
                       </div>
                     )}
                     {inspection.parking_latitude && inspection.parking_longitude && (
-                      <div className="p-3 rounded-lg bg-muted/50">
+                      <a
+                        href={`https://www.google.com/maps?q=${inspection.parking_latitude},${inspection.parking_longitude}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="block p-3 rounded-lg bg-muted/50 hover:bg-muted/80 transition-colors group"
+                      >
                         <p className="text-xs text-muted-foreground mb-1">GPS Coordinates</p>
-                        <p className="text-sm font-mono text-foreground">
-                          {inspection.parking_latitude.toFixed(6)}, {inspection.parking_longitude.toFixed(6)}
+                        <p className="text-sm font-mono text-foreground group-hover:text-secondary transition-colors">
+                          📍 {inspection.parking_latitude.toFixed(6)}, {inspection.parking_longitude.toFixed(6)}
                         </p>
-                      </div>
+                        <p className="text-[10px] text-muted-foreground mt-1">Tap to open in Maps</p>
+                      </a>
                     )}
                     <div className="p-3 rounded-lg bg-muted/50">
                       <p className="text-xs text-muted-foreground mb-1">Inspection Status</p>
