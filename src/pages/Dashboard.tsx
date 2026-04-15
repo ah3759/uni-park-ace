@@ -571,6 +571,19 @@ const Dashboard = () => {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* Detail Panel */}
+      {detailRequest && user && (
+        <RequestDetailPanel
+          request={detailRequest}
+          userId={user.id}
+          onClose={() => setDetailRequest(null)}
+          onStatusChange={(id, status) => {
+            updateStatus(id, status);
+            setDetailRequest(prev => prev ? { ...prev, status } : null);
+          }}
+        />
+      )}
     </div>
   );
 };
