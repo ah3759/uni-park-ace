@@ -90,13 +90,42 @@ const ParkingForm = () => {
         console.error("Failed to send queue SMS:", smsError);
       }
 
+      // Map service type to Stripe plan ID
+      const planMap: Record<string, string> = {
+        single: "pay-per-use",
+        monthly: "monthly-pro",
+        semester: "semester-pass",
+      };
+      const planId = planMap[validatedData.serviceType] || "pay-per-use";
+
       toast({
         title: "Parking Request Submitted!",
-        description: "Redirecting you to your queue status...",
+        description: "Redirecting you to payment...",
       });
 
-      // Redirect to queue status page
-      navigate(`/queue/${data.id}`);
+      // Redirect to Stripe checkout
+      try {
+        const { data: checkoutData, error: checkoutError } = await supabase.functions.invoke("create-checkout", {
+          body: { planId },
+        });
+
+        if (checkoutError) throw checkoutError;
+
+        if (checkoutData?.url) {
+          window.location.assign(checkoutData.url);
+        } else {
+          // Fallback to queue page if no checkout URL
+          navigate(`/queue/${data.id}`);
+        }
+      } catch (paymentError) {
+        console.error("Payment redirect failed:", paymentError);
+        toast({
+          title: "Request saved, but payment failed",
+          description: "You can complete payment from your dashboard.",
+          variant: "destructive",
+        });
+        navigate(`/queue/${data.id}`);
+      }
     } catch (error) {
       if (error instanceof z.ZodError) {
         const newErrors: Record<string, string> = {};
