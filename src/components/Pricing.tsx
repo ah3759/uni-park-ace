@@ -1,9 +1,10 @@
+import { useState } from "react";
 import { Check, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useNavigate } from "react-router-dom";
+import PricingCheckoutModal from "@/components/PricingCheckoutModal";
 
 const Pricing = () => {
-  const navigate = useNavigate();
+  const [selectedPlan, setSelectedPlan] = useState<{ id: string; name: string; price: string; period: string } | null>(null);
 
   const plans = [
     {
