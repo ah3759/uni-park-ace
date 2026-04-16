@@ -108,12 +108,12 @@ const Footer = () => {
             © 2025 UNiVale. All rights reserved.
           </p>
           <div className="flex items-center gap-6">
-            <a href="#" className="text-sm text-primary-foreground/40 hover:text-primary-foreground transition-colors">
+            <Link to="/privacy" className="text-sm text-primary-foreground/40 hover:text-primary-foreground transition-colors">
               Privacy Policy
-            </a>
-            <a href="#" className="text-sm text-primary-foreground/40 hover:text-primary-foreground transition-colors">
+            </Link>
+            <Link to="/terms" className="text-sm text-primary-foreground/40 hover:text-primary-foreground transition-colors">
               Terms of Service
-            </a>
+            </Link>
           </div>
           <div className="flex items-center gap-4">
             <a href="#" className="w-10 h-10 rounded-full bg-primary-foreground/10 flex items-center justify-center hover:bg-primary-foreground/20 transition-colors">
