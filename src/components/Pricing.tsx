@@ -130,7 +130,7 @@ const Pricing = () => {
                 variant={plan.popular ? "hero" : "secondary"}
                 size="lg"
                 className="w-full"
-                onClick={() => navigate(`/checkout?plan=${plan.id}`)}
+                onClick={() => setSelectedPlan({ id: plan.id, name: plan.name, price: plan.price, period: plan.period })}
               >
                 {plan.cta}
               </Button>
