@@ -1,9 +1,10 @@
+import { useState } from "react";
 import { Check, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useNavigate } from "react-router-dom";
+import PricingCheckoutModal from "@/components/PricingCheckoutModal";
 
 const Pricing = () => {
-  const navigate = useNavigate();
+  const [selectedPlan, setSelectedPlan] = useState<{ id: string; name: string; price: string; period: string } | null>(null);
 
   const plans = [
     {
@@ -59,6 +60,7 @@ const Pricing = () => {
   ];
 
   return (
+    <>
     <section id="pricing" className="py-24 bg-background relative overflow-hidden">
       {/* Background */}
       <div className="absolute top-0 left-0 w-96 h-96 bg-secondary/5 rounded-full blur-3xl" />
@@ -129,7 +131,7 @@ const Pricing = () => {
                 variant={plan.popular ? "hero" : "secondary"}
                 size="lg"
                 className="w-full"
-                onClick={() => navigate(`/checkout?plan=${plan.id}`)}
+                onClick={() => setSelectedPlan({ id: plan.id, name: plan.name, price: plan.price, period: plan.period })}
               >
                 {plan.cta}
               </Button>
@@ -143,6 +145,13 @@ const Pricing = () => {
         </p>
       </div>
     </section>
+
+    <PricingCheckoutModal
+      open={!!selectedPlan}
+      onOpenChange={(open) => !open && setSelectedPlan(null)}
+      plan={selectedPlan}
+    />
+    </>
   );
 };
 
