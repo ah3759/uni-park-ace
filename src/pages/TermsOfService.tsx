@@ -1,11 +1,20 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
+import { ArrowLeft } from "lucide-react";
 
 const TermsOfService = () => {
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
       <main className="container mx-auto px-4 pt-24 pb-16 max-w-3xl">
+        <Link to="/">
+          <Button variant="ghost" className="mb-6 -ml-4">
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            Back to Home
+          </Button>
+        </Link>
         <h1 className="font-display text-4xl font-bold text-foreground mb-2">Terms of Service</h1>
         <p className="text-muted-foreground mb-8">Last updated: April 16, 2026</p>
 
