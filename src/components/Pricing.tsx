@@ -144,6 +144,13 @@ const Pricing = () => {
         </p>
       </div>
     </section>
+
+    <PricingCheckoutModal
+      open={!!selectedPlan}
+      onOpenChange={(open) => !open && setSelectedPlan(null)}
+      plan={selectedPlan}
+    />
+    </>
   );
 };
 
