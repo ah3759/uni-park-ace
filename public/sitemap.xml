@@ -1,38 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://univale.lovable.app/</loc>
-    <lastmod>2026-04-13</lastmod>
+    <loc>https://univale.app/</loc>
+    <lastmod>2026-04-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://univale.lovable.app/customer-login</loc>
-    <lastmod>2026-04-13</lastmod>
+    <loc>https://univale.app/customer-login</loc>
+    <lastmod>2026-04-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://univale.lovable.app/checkout</loc>
-    <lastmod>2026-04-13</lastmod>
+    <loc>https://univale.app/checkout</loc>
+    <lastmod>2026-04-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://univale.lovable.app/customer-dashboard</loc>
-    <lastmod>2026-04-13</lastmod>
+    <loc>https://univale.app/customer-dashboard</loc>
+    <lastmod>2026-04-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://univale.lovable.app/login</loc>
-    <lastmod>2026-04-13</lastmod>
+    <loc>https://univale.app/login</loc>
+    <lastmod>2026-04-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://univale.lovable.app/dashboard</loc>
-    <lastmod>2026-04-13</lastmod>
+    <loc>https://univale.app/dashboard</loc>
+    <lastmod>2026-04-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
