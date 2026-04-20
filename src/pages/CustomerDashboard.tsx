@@ -179,7 +179,12 @@ const CustomerDashboard = () => {
               </Card>
             ) : (
               activeRequests.map((req) => (
-                <RequestCard key={req.id} request={req} />
+                <RequestCard
+                  key={req.id}
+                  request={req}
+                  userEmail={user?.email ?? ""}
+                  userName={displayName}
+                />
               ))
             )}
           </TabsContent>
@@ -195,7 +200,12 @@ const CustomerDashboard = () => {
               </Card>
             ) : (
               completedRequests.map((req) => (
-                <RequestCard key={req.id} request={req} />
+                <RequestCard
+                  key={req.id}
+                  request={req}
+                  userEmail={user?.email ?? ""}
+                  userName={displayName}
+                />
               ))
             )}
           </TabsContent>
