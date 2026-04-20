@@ -1,5 +1,6 @@
-import { Car, Mail, Phone, MapPin, Instagram, Twitter, Linkedin } from "lucide-react";
+import { Mail, Phone, MapPin, Instagram, Twitter, Linkedin } from "lucide-react";
 import { Link } from "react-router-dom";
+import CarLogo from "@/components/CarLogo";
 
 const Footer = () => {
   const links = {
@@ -32,7 +33,7 @@ const Footer = () => {
           <div className="lg:col-span-2">
             <a href="#" className="flex items-center gap-2 mb-6">
               <div className="w-10 h-10 accent-gradient rounded-xl flex items-center justify-center">
-                <Car className="w-5 h-5 text-accent-foreground" />
+                <CarLogo className="w-5 h-5 text-accent-foreground" />
               </div>
               <span className="font-display text-xl font-bold">
                 UNi<span className="text-secondary">Vale</span>

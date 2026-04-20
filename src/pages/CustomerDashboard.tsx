@@ -6,9 +6,10 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Car, Clock, CreditCard, Crown, LogOut, History, Package, Plus } from "lucide-react";
+import { Clock, CreditCard, Crown, LogOut, History, Package, Plus } from "lucide-react";
 import CustomerNewRequest from "@/components/CustomerNewRequest";
 import PickupRequestButton from "@/components/PickupRequestButton";
+import CarLogo from "@/components/CarLogo";
 
 interface ParkingRequest {
   id: string;
@@ -88,7 +89,7 @@ const CustomerDashboard = () => {
         <div className="container mx-auto px-4 h-16 flex items-center justify-between">
           <a href="/" className="flex items-center gap-2">
             <div className="w-8 h-8 accent-gradient rounded-lg flex items-center justify-center">
-              <Car className="w-4 h-4 text-accent-foreground" />
+              <CarLogo className="w-4 h-4 text-accent-foreground" />
             </div>
             <span className="font-display text-lg font-bold text-foreground">
               UNi<span className="text-gradient">Vale</span>

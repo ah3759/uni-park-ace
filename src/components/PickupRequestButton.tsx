@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/use-toast";
-import { Loader2, Car, CheckCircle2 } from "lucide-react";
+import { Loader2, CheckCircle2 } from "lucide-react";
+import CarLogo from "@/components/CarLogo";
 
 interface Props {
   parkingRequestId: string;
@@ -89,7 +90,7 @@ const PickupRequestButton = ({ parkingRequestId, customerEmail, customerName, re
       className="w-full"
       variant={canRequest ? "default" : "secondary"}
     >
-      {submitting ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Car className="w-4 h-4 mr-2" />}
+      {submitting ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <CarLogo className="w-4 h-4 mr-2" />}
       {canRequest ? "Request my car back" : "Available once parked"}
     </Button>
   );

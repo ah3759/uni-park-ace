@@ -1,10 +1,11 @@
 import { useState } from "react";
-import { Search, Car, Clock, CheckCircle, AlertCircle, MapPin } from "lucide-react";
+import { Search, Clock, CheckCircle, AlertCircle, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import CarLogo from "@/components/CarLogo";
 
 const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/chat`;
 
@@ -127,7 +128,7 @@ const ChatStatusLookup = () => {
                   <div key={r.id} className="rounded-lg border border-border/50 bg-muted/20 p-3">
                     <div className="flex items-center justify-between mb-1.5">
                       <div className="flex items-center gap-1.5">
-                        <Car className="w-3.5 h-3.5 text-primary" />
+                        <CarLogo className="w-3.5 h-3.5 text-primary" />
                         <span className="text-xs font-medium">{r.vehicle_color} {r.vehicle_make} {r.vehicle_model}</span>
                       </div>
                       <Badge variant={config.variant} className="text-[10px] h-5">
@@ -160,7 +161,7 @@ const ChatStatusLookup = () => {
                   <div key={s.id} className="rounded-lg border border-border/50 bg-muted/20 p-3">
                     <div className="flex items-center justify-between mb-1.5">
                       <div className="flex items-center gap-1.5">
-                        <Car className="w-3.5 h-3.5 text-primary" />
+                        <CarLogo className="w-3.5 h-3.5 text-primary" />
                         <span className="text-xs font-medium">{s.vehicle_color} {s.vehicle_make} {s.vehicle_model}</span>
                       </div>
                       <Badge variant={config.variant} className="text-[10px] h-5">
