@@ -157,13 +157,13 @@ export function getSlotIndex(date: Date): number {
   return (h - START_HOUR) * 2 + (m >= 30 ? 1 : 0);
 }
 
-// Get day-of-week index 0..4 for Mon..Fri, -1 if weekend
+// Get day-of-week index 0..6 for Mon..Sun, -1 if outside week
 export function getDayIndex(date: Date, weekStart: Date): number {
   const ws = new Date(weekStart);
   ws.setHours(0, 0, 0, 0);
   const d = new Date(date);
   d.setHours(0, 0, 0, 0);
   const diffDays = Math.round((d.getTime() - ws.getTime()) / (1000 * 60 * 60 * 24));
-  if (diffDays < 0 || diffDays > 4) return -1;
+  if (diffDays < 0 || diffDays > 6) return -1;
   return diffDays;
 }
