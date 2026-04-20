@@ -16,6 +16,7 @@ import Unsubscribe from "./pages/Unsubscribe";
 import QueueStatus from "./pages/QueueStatus";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfService from "./pages/TermsOfService";
+import Schedule from "./pages/Schedule";
 
 const queryClient = new QueryClient();
 
@@ -36,6 +37,7 @@ const App = () => (
             <Route path="/checkout" element={<Checkout />} />
             <Route path="/unsubscribe" element={<Unsubscribe />} />
             <Route path="/queue/:requestId" element={<QueueStatus />} />
+            <Route path="/schedule" element={<Schedule />} />
             <Route path="/privacy" element={<PrivacyPolicy />} />
             <Route path="/terms" element={<TermsOfService />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
