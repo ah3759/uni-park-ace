@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Search, Clock, CheckCircle, AlertCircle, MapPin } from "lucide-react";
+import { Search, Clock, CheckCircle, AlertCircle, MapPin, Car } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";

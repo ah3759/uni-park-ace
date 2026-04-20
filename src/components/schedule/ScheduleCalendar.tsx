@@ -5,11 +5,11 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ChevronLeft, ChevronRight, CalendarDays, MapPin, Clock, User, FileText, Phone, Mail } from "lucide-react";
 import {
-import CarLogo from "@/components/CarLogo";
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import CarLogo from "@/components/CarLogo";
 import {
   LOCATION_LABELS,
   LOCATION_STYLES,
