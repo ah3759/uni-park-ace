@@ -180,7 +180,7 @@ const ScheduleCalendar = ({ showFullDetails = false }: ScheduleCalendarProps) =>
             <Clock className="h-3 w-3" />
             {showFullDetails
               ? `${totalBookings} ${totalBookings === 1 ? "booking" : "bookings"} this week`
-              : `${totalBookings} ${totalBookings === 1 ? "slot" : "slots"} unavailable`}
+              : `${totalBookings} ${totalBookings === 1 ? "slot" : "slots"} reserved`}
           </Badge>
           {loading && <span className="text-xs">Updating…</span>}
         </div>
@@ -300,10 +300,10 @@ const EventCard = ({ event, showFullDetails }: EventCardProps) => {
     return (
       <div
         className="rounded-md px-2 py-1 text-[11px] bg-muted text-muted-foreground/70 border border-border/40 cursor-not-allowed select-none"
-        aria-label="Unavailable time slot"
-        title="Unavailable"
+        aria-label="Reserved time slot"
+        title="Reserved"
       >
-        Unavailable
+        Reserved
       </div>
     );
   }
