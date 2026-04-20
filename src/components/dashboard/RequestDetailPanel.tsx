@@ -262,12 +262,18 @@ const RequestDetailPanel = ({ request, userId, onClose, onStatusChange }: Props)
                   className="text-xs gap-1"
                   onClick={async () => {
                     try {
+                      // Update DB directly so parent's generic toast doesn't fire
+                      const { error: updErr } = await supabase
+                        .from("parking_requests")
+                        .update({ status: "in_progress" })
+                        .eq("id", request.id);
+                      if (updErr) throw updErr;
+
                       const { error } = await supabase.functions.invoke("send-pickup-ready-email", {
                         body: { requestId: request.id },
                       });
                       if (error) throw error;
-                      toast({ title: "Parked — pickup-ready email sent", description: `Sent to ${request.email}` });
-                      onStatusChange(request.id, "in_progress");
+                      toast({ title: "Vehicle marked parked", description: `Pickup-ready email sent to ${request.email}` });
                     } catch (err: any) {
                       toast({ title: "Failed to send pickup email", description: err.message, variant: "destructive" });
                     }
