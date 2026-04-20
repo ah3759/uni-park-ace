@@ -257,7 +257,7 @@ const RequestDetailPanel = ({ request, userId, onClose, onStatusChange }: Props)
                   </Button>
                 ))}
                 <Button
-                  variant="secondary"
+                  variant="outline"
                   size="sm"
                   className="text-xs gap-1"
                   onClick={async () => {
