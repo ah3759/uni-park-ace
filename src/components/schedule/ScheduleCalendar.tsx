@@ -204,7 +204,7 @@ const ScheduleCalendar = ({ showFullDetails = false }: ScheduleCalendarProps) =>
         <div className="overflow-x-auto">
           <div className="min-w-[760px]">
             {/* Header row */}
-            <div className="grid grid-cols-[80px_repeat(5,1fr)] border-b bg-muted/30 sticky top-0 z-10">
+            <div className="grid grid-cols-[80px_repeat(7,1fr)] border-b bg-muted/30 sticky top-0 z-10">
               <div className="px-2 py-3 text-xs font-medium text-muted-foreground">Time</div>
               {DAYS.map((d, i) => {
                 const dayDate = addDays(weekStart, i);
