@@ -38,7 +38,7 @@ const ScheduleCalendar = ({ showFullDetails = false }: ScheduleCalendarProps) =>
   const slots = useMemo(() => generateTimeSlots(), []);
 
   const weekEnd = useMemo(() => {
-    const e = addDays(weekStart, 5);
+    const e = addDays(weekStart, 7);
     e.setHours(0, 0, 0, 0);
     return e;
   }, [weekStart]);
