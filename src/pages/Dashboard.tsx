@@ -12,9 +12,11 @@ import { Label } from "@/components/ui/label";
 import { toast } from "@/components/ui/use-toast";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
-import { LogOut, Car, Search, Clock, CheckCircle, XCircle, PlayCircle, AlertCircle, RefreshCw, Shield, ClipboardCheck, Plus, Pencil, Trash2 } from "lucide-react";
+import { LogOut, Car, Search, Clock, CheckCircle, XCircle, PlayCircle, AlertCircle, RefreshCw, Shield, ClipboardCheck, Plus, Pencil, Trash2, CalendarDays, List } from "lucide-react";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import InspectionWorkflow from "@/components/inspection/InspectionWorkflow";
 import RequestDetailPanel from "@/components/dashboard/RequestDetailPanel";
+import ScheduleCalendar from "@/components/schedule/ScheduleCalendar";
 import { US_STATES } from "@/data/usStates";
 
 type RequestStatus = "pending" | "confirmed" | "in_progress" | "completed" | "cancelled";
@@ -310,154 +312,172 @@ const Dashboard = () => {
           ))}
         </div>
 
-        {/* Filters */}
-        <div className="flex flex-col sm:flex-row gap-3">
-          <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-            <Input
-              placeholder="Search by name, license plate, or email..."
-              className="pl-9"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-          </div>
-          <Select value={statusFilter} onValueChange={setStatusFilter}>
-            <SelectTrigger className="w-full sm:w-48">
-              <SelectValue placeholder="Filter by status" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Statuses</SelectItem>
-              {Object.entries(statusConfig).map(([k, v]) => (
-                <SelectItem key={k} value={k}>{v.label}</SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          <Button variant="outline" size="icon" onClick={fetchRequests}>
-            <RefreshCw className="w-4 h-4" />
-          </Button>
-          <Button onClick={openCreateForm}>
-            <Plus className="w-4 h-4 mr-1" /> New Request
-          </Button>
-        </div>
+        {/* View Tabs */}
+        <Tabs defaultValue="list" className="space-y-4">
+          <TabsList>
+            <TabsTrigger value="list" className="gap-1.5">
+              <List className="w-4 h-4" /> List View
+            </TabsTrigger>
+            <TabsTrigger value="schedule" className="gap-1.5">
+              <CalendarDays className="w-4 h-4" /> Schedule
+            </TabsTrigger>
+          </TabsList>
 
-        {/* Request Table */}
-        {loading ? (
-          <div className="text-center py-12 text-muted-foreground">Loading requests...</div>
-        ) : filtered.length === 0 ? (
-          <div className="text-center py-12 text-muted-foreground">No requests found</div>
-        ) : (
-          <div className="overflow-x-auto rounded-lg border border-border">
-            <table className="w-full text-sm">
-              <thead className="bg-muted/50">
-                <tr>
-                  <th className="text-left p-3 font-medium text-muted-foreground">Customer</th>
-                  <th className="text-left p-3 font-medium text-muted-foreground hidden md:table-cell">Vehicle</th>
-                  <th className="text-left p-3 font-medium text-muted-foreground hidden lg:table-cell">Location</th>
-                  <th className="text-left p-3 font-medium text-muted-foreground">Status</th>
-                  <th className="text-left p-3 font-medium text-muted-foreground hidden sm:table-cell">Time</th>
-                  <th className="text-left p-3 font-medium text-muted-foreground">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filtered.map(req => {
-                  const sc = statusConfig[req.status];
-                  return (
-                    <tr key={req.id} className="border-t border-border hover:bg-muted/30 transition-colors">
-                      <td className="p-3">
-                        <p className="font-medium text-foreground">{req.first_name} {req.last_name}</p>
-                        <p className="text-xs text-muted-foreground">{req.phone}</p>
-                      </td>
-                      <td className="p-3 hidden md:table-cell">
-                        <p className="text-foreground">{req.vehicle_color} {req.vehicle_make} {req.vehicle_model}</p>
-                        <p className="text-xs text-muted-foreground font-mono">{req.license_plate}</p>
-                      </td>
-                      <td className="p-3 hidden lg:table-cell text-foreground">
-                        {locationLabels[req.pickup_location] || req.pickup_location}
-                      </td>
-                      <td className="p-3">
-                        <Badge variant="outline" className={sc.className}>{sc.label}</Badge>
-                      </td>
-                      <td className="p-3 hidden sm:table-cell text-muted-foreground text-xs">
-                        {new Date(req.created_at).toLocaleString()}
-                      </td>
-                      <td className="p-3">
-                        <div className="flex gap-1">
-                          {(req.status === "pending" || req.status === "confirmed") && (
-                            <Dialog open={inspectingRequest?.id === req.id} onOpenChange={(open) => !open && setInspectingRequest(null)}>
-                              <DialogTrigger asChild>
-                                <Button variant="default" size="sm" onClick={() => setInspectingRequest(req)}>
-                                  <ClipboardCheck className="w-4 h-4 mr-1" /> Inspect
-                                </Button>
-                              </DialogTrigger>
-                              <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
-                                <DialogHeader>
-                                  <DialogTitle className="font-display">Vehicle Inspection</DialogTitle>
-                                </DialogHeader>
-                                <InspectionWorkflow
-                                  requestId={req.id}
-                                  customerName={`${req.first_name} ${req.last_name}`}
-                                  vehicleInfo={`${req.vehicle_color} ${req.vehicle_make} ${req.vehicle_model}`}
-                                  vehicleModel={req.vehicle_model}
-                                  licensePlate={req.license_plate}
-                                  onComplete={() => fetchRequests()}
-                                  onClose={() => setInspectingRequest(null)}
-                                />
-                              </DialogContent>
-                            </Dialog>
-                          )}
-                          <Button variant="outline" size="sm" onClick={() => openEditForm(req)}>
-                            <Pencil className="w-4 h-4" />
-                          </Button>
-                          <Button variant="outline" size="sm" onClick={() => openDetail(req)}>
-                            View
-                          </Button>
-                          <AlertDialog onOpenChange={() => setDeleteConfirmCode("")}>
-                            <AlertDialogTrigger asChild>
-                              <Button variant="outline" size="sm" className="text-destructive hover:text-destructive">
-                                <Trash2 className="w-4 h-4" />
-                              </Button>
-                            </AlertDialogTrigger>
-                            <AlertDialogContent>
-                              <AlertDialogHeader>
-                                <AlertDialogTitle>Delete Request</AlertDialogTitle>
-                                <AlertDialogDescription>
-                                  Are you sure you want to delete the request for {req.first_name} {req.last_name}? This action cannot be undone.
-                                </AlertDialogDescription>
-                              </AlertDialogHeader>
-                              <div className="py-4">
-                                <Label htmlFor={`delete-code-${req.id}`} className="text-sm font-medium">
-                                  Enter confirmation code <span className="font-bold">{DELETE_CODE}</span> to delete
-                                </Label>
-                                <Input
-                                  id={`delete-code-${req.id}`}
-                                  className="mt-2"
-                                  placeholder="Enter 4-digit code"
-                                  maxLength={4}
-                                  value={deleteConfirmCode}
-                                  onChange={(e) => setDeleteConfirmCode(e.target.value.replace(/\D/g, ""))}
-                                />
-                              </div>
-                              <AlertDialogFooter>
-                                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                <AlertDialogAction
-                                  disabled={deleteConfirmCode !== DELETE_CODE}
-                                  onClick={() => deleteRequest(req.id)}
-                                  className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                                >
-                                  Delete
-                                </AlertDialogAction>
-                              </AlertDialogFooter>
-                            </AlertDialogContent>
-                          </AlertDialog>
-                        </div>
-                      </td>
+          <TabsContent value="list" className="space-y-6 mt-0">
+            {/* Filters */}
+            <div className="flex flex-col sm:flex-row gap-3">
+              <div className="relative flex-1">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                <Input
+                  placeholder="Search by name, license plate, or email..."
+                  className="pl-9"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                />
+              </div>
+              <Select value={statusFilter} onValueChange={setStatusFilter}>
+                <SelectTrigger className="w-full sm:w-48">
+                  <SelectValue placeholder="Filter by status" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Statuses</SelectItem>
+                  {Object.entries(statusConfig).map(([k, v]) => (
+                    <SelectItem key={k} value={k}>{v.label}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <Button variant="outline" size="icon" onClick={fetchRequests}>
+                <RefreshCw className="w-4 h-4" />
+              </Button>
+              <Button onClick={openCreateForm}>
+                <Plus className="w-4 h-4 mr-1" /> New Request
+              </Button>
+            </div>
+
+            {/* Request Table */}
+            {loading ? (
+              <div className="text-center py-12 text-muted-foreground">Loading requests...</div>
+            ) : filtered.length === 0 ? (
+              <div className="text-center py-12 text-muted-foreground">No requests found</div>
+            ) : (
+              <div className="overflow-x-auto rounded-lg border border-border">
+                <table className="w-full text-sm">
+                  <thead className="bg-muted/50">
+                    <tr>
+                      <th className="text-left p-3 font-medium text-muted-foreground">Customer</th>
+                      <th className="text-left p-3 font-medium text-muted-foreground hidden md:table-cell">Vehicle</th>
+                      <th className="text-left p-3 font-medium text-muted-foreground hidden lg:table-cell">Location</th>
+                      <th className="text-left p-3 font-medium text-muted-foreground">Status</th>
+                      <th className="text-left p-3 font-medium text-muted-foreground hidden sm:table-cell">Time</th>
+                      <th className="text-left p-3 font-medium text-muted-foreground">Actions</th>
                     </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
-        )}
+                  </thead>
+                  <tbody>
+                    {filtered.map(req => {
+                      const sc = statusConfig[req.status];
+                      return (
+                        <tr key={req.id} className="border-t border-border hover:bg-muted/30 transition-colors">
+                          <td className="p-3">
+                            <p className="font-medium text-foreground">{req.first_name} {req.last_name}</p>
+                            <p className="text-xs text-muted-foreground">{req.phone}</p>
+                          </td>
+                          <td className="p-3 hidden md:table-cell">
+                            <p className="text-foreground">{req.vehicle_color} {req.vehicle_make} {req.vehicle_model}</p>
+                            <p className="text-xs text-muted-foreground font-mono">{req.license_plate}</p>
+                          </td>
+                          <td className="p-3 hidden lg:table-cell text-foreground">
+                            {locationLabels[req.pickup_location] || req.pickup_location}
+                          </td>
+                          <td className="p-3">
+                            <Badge variant="outline" className={sc.className}>{sc.label}</Badge>
+                          </td>
+                          <td className="p-3 hidden sm:table-cell text-muted-foreground text-xs">
+                            {new Date(req.created_at).toLocaleString()}
+                          </td>
+                          <td className="p-3">
+                            <div className="flex gap-1">
+                              {(req.status === "pending" || req.status === "confirmed") && (
+                                <Dialog open={inspectingRequest?.id === req.id} onOpenChange={(open) => !open && setInspectingRequest(null)}>
+                                  <DialogTrigger asChild>
+                                    <Button variant="default" size="sm" onClick={() => setInspectingRequest(req)}>
+                                      <ClipboardCheck className="w-4 h-4 mr-1" /> Inspect
+                                    </Button>
+                                  </DialogTrigger>
+                                  <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
+                                    <DialogHeader>
+                                      <DialogTitle className="font-display">Vehicle Inspection</DialogTitle>
+                                    </DialogHeader>
+                                    <InspectionWorkflow
+                                      requestId={req.id}
+                                      customerName={`${req.first_name} ${req.last_name}`}
+                                      vehicleInfo={`${req.vehicle_color} ${req.vehicle_make} ${req.vehicle_model}`}
+                                      vehicleModel={req.vehicle_model}
+                                      licensePlate={req.license_plate}
+                                      onComplete={() => fetchRequests()}
+                                      onClose={() => setInspectingRequest(null)}
+                                    />
+                                  </DialogContent>
+                                </Dialog>
+                              )}
+                              <Button variant="outline" size="sm" onClick={() => openEditForm(req)}>
+                                <Pencil className="w-4 h-4" />
+                              </Button>
+                              <Button variant="outline" size="sm" onClick={() => openDetail(req)}>
+                                View
+                              </Button>
+                              <AlertDialog onOpenChange={() => setDeleteConfirmCode("")}>
+                                <AlertDialogTrigger asChild>
+                                  <Button variant="outline" size="sm" className="text-destructive hover:text-destructive">
+                                    <Trash2 className="w-4 h-4" />
+                                  </Button>
+                                </AlertDialogTrigger>
+                                <AlertDialogContent>
+                                  <AlertDialogHeader>
+                                    <AlertDialogTitle>Delete Request</AlertDialogTitle>
+                                    <AlertDialogDescription>
+                                      Are you sure you want to delete the request for {req.first_name} {req.last_name}? This action cannot be undone.
+                                    </AlertDialogDescription>
+                                  </AlertDialogHeader>
+                                  <div className="py-4">
+                                    <Label htmlFor={`delete-code-${req.id}`} className="text-sm font-medium">
+                                      Enter confirmation code <span className="font-bold">{DELETE_CODE}</span> to delete
+                                    </Label>
+                                    <Input
+                                      id={`delete-code-${req.id}`}
+                                      className="mt-2"
+                                      placeholder="Enter 4-digit code"
+                                      maxLength={4}
+                                      value={deleteConfirmCode}
+                                      onChange={(e) => setDeleteConfirmCode(e.target.value.replace(/\D/g, ""))}
+                                    />
+                                  </div>
+                                  <AlertDialogFooter>
+                                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                    <AlertDialogAction
+                                      disabled={deleteConfirmCode !== DELETE_CODE}
+                                      onClick={() => deleteRequest(req.id)}
+                                      className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                                    >
+                                      Delete
+                                    </AlertDialogAction>
+                                  </AlertDialogFooter>
+                                </AlertDialogContent>
+                              </AlertDialog>
+                            </div>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </TabsContent>
+
+          <TabsContent value="schedule" className="mt-0">
+            <ScheduleCalendar showFullDetails={true} />
+          </TabsContent>
+        </Tabs>
       </main>
 
       {/* Create / Edit Dialog */}
