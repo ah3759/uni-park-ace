@@ -8,11 +8,11 @@ const Navbar = () => {
   const navigate = useNavigate();
 
   const navLinks = [
-    { name: "Services", href: "#services" },
-    { name: "Schedule", href: "#schedule" },
-    { name: "Pricing", href: "#pricing" },
-    { name: "Events", href: "#business-booking" },
-    { name: "Contact", href: "#contact" },
+    { name: "Services", href: "/#services" },
+    { name: "Schedule", href: "/schedule" },
+    { name: "Pricing", href: "/#pricing" },
+    { name: "Events", href: "/#business-booking" },
+    { name: "Contact", href: "/#contact" },
   ];
 
   return (
