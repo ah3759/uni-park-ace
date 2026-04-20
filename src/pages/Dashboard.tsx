@@ -306,7 +306,7 @@ const Dashboard = () => {
         {/* Stats */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {[
-            { label: "Total Requests", value: stats.total, icon: Car },
+            { label: "Total Requests", value: stats.total, icon: CarLogo },
             { label: "Pending", value: stats.pending, icon: Clock },
             { label: "Active", value: stats.active, icon: PlayCircle },
             { label: "Completed", value: stats.completed, icon: CheckCircle },
