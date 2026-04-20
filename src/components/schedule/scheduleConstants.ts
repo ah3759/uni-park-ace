@@ -115,7 +115,7 @@ export function addDays(date: Date, days: number): Date {
 }
 
 export function formatWeekRange(weekStart: Date): string {
-  const end = addDays(weekStart, 4);
+  const end = addDays(weekStart, 6);
   const sameMonth = weekStart.getMonth() === end.getMonth();
   const opts: Intl.DateTimeFormatOptions = { month: "short", day: "numeric" };
   if (sameMonth) {
