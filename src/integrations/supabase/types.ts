@@ -223,6 +223,101 @@ export type Database = {
           },
         ]
       }
+      pickup_ping_tokens: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          parking_request_id: string
+          token: string
+          used_at: string | null
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id?: string
+          parking_request_id: string
+          token: string
+          used_at?: string | null
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          parking_request_id?: string
+          token?: string
+          used_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pickup_ping_tokens_parking_request_id_fkey"
+            columns: ["parking_request_id"]
+            isOneToOne: false
+            referencedRelation: "parking_requests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      pickup_requests: {
+        Row: {
+          acknowledged_at: string | null
+          acknowledged_by: string | null
+          completed_at: string | null
+          created_at: string
+          customer_email: string
+          customer_name: string | null
+          id: string
+          notes: string | null
+          parking_request_id: string
+          source: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          acknowledged_at?: string | null
+          acknowledged_by?: string | null
+          completed_at?: string | null
+          created_at?: string
+          customer_email: string
+          customer_name?: string | null
+          id?: string
+          notes?: string | null
+          parking_request_id: string
+          source?: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          acknowledged_at?: string | null
+          acknowledged_by?: string | null
+          completed_at?: string | null
+          created_at?: string
+          customer_email?: string
+          customer_name?: string | null
+          id?: string
+          notes?: string | null
+          parking_request_id?: string
+          source?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pickup_requests_acknowledged_by_fkey"
+            columns: ["acknowledged_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pickup_requests_parking_request_id_fkey"
+            columns: ["parking_request_id"]
+            isOneToOne: false
+            referencedRelation: "parking_requests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           created_at: string
@@ -285,6 +380,35 @@ export type Database = {
             columns: ["request_id"]
             isOneToOne: false
             referencedRelation: "parking_requests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      schedule_reminders_sent: {
+        Row: {
+          id: string
+          reminder_type: string
+          schedule_id: string
+          sent_at: string
+        }
+        Insert: {
+          id?: string
+          reminder_type: string
+          schedule_id: string
+          sent_at?: string
+        }
+        Update: {
+          id?: string
+          reminder_type?: string
+          schedule_id?: string
+          sent_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "schedule_reminders_sent_schedule_id_fkey"
+            columns: ["schedule_id"]
+            isOneToOne: false
+            referencedRelation: "valet_schedules"
             referencedColumns: ["id"]
           },
         ]
