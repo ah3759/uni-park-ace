@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Car, Clock, CreditCard, Crown, LogOut, History, Package, Plus } from "lucide-react";
 import CustomerNewRequest from "@/components/CustomerNewRequest";
+import PickupRequestButton from "@/components/PickupRequestButton";
 
 interface ParkingRequest {
   id: string;
