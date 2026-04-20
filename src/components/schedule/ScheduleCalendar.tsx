@@ -178,26 +178,30 @@ const ScheduleCalendar = ({ showFullDetails = false }: ScheduleCalendarProps) =>
         <div className="flex items-center gap-2 text-sm text-muted-foreground">
           <Badge variant="secondary" className="gap-1">
             <Clock className="h-3 w-3" />
-            {totalBookings} {totalBookings === 1 ? "booking" : "bookings"} this week
+            {showFullDetails
+              ? `${totalBookings} ${totalBookings === 1 ? "booking" : "bookings"} this week`
+              : `${totalBookings} ${totalBookings === 1 ? "slot" : "slots"} unavailable`}
           </Badge>
           {loading && <span className="text-xs">Updating…</span>}
         </div>
       </div>
 
-      {/* Location color legend */}
-      <Card className="p-3">
-        <div className="flex flex-wrap gap-x-4 gap-y-2 text-xs">
-          {Object.entries(LOCATION_LABELS).map(([key, label]) => {
-            const style = LOCATION_STYLES[key] ?? FALLBACK_STYLE;
-            return (
-              <div key={key} className="flex items-center gap-1.5">
-                <span className={`h-2.5 w-2.5 rounded-full ${style.dot}`} />
-                <span className="text-muted-foreground">{label}</span>
-              </div>
-            );
-          })}
-        </div>
-      </Card>
+      {/* Location color legend (employee view only) */}
+      {showFullDetails && (
+        <Card className="p-3">
+          <div className="flex flex-wrap gap-x-4 gap-y-2 text-xs">
+            {Object.entries(LOCATION_LABELS).map(([key, label]) => {
+              const style = LOCATION_STYLES[key] ?? FALLBACK_STYLE;
+              return (
+                <div key={key} className="flex items-center gap-1.5">
+                  <span className={`h-2.5 w-2.5 rounded-full ${style.dot}`} />
+                  <span className="text-muted-foreground">{label}</span>
+                </div>
+              );
+            })}
+          </div>
+        </Card>
+      )}
 
       {/* Calendar grid */}
       <Card className="overflow-hidden">
