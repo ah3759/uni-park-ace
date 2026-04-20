@@ -6,10 +6,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "@/components/ui/use-toast";
-import {
-  X, Phone, Mail, MapPin, Car, Clock, MessageSquare,
-  Camera, ParkingSquare, FileText, User, CreditCard, CheckCircle2, DollarSign,
-} from "lucide-react";
+import { X, Phone, Mail, MapPin, Clock, MessageSquare, Camera, ParkingSquare, FileText, User, CreditCard, CheckCircle2, DollarSign } from "lucide-react";
+import CarLogo from "@/components/CarLogo";
 
 type RequestStatus = "pending" | "confirmed" | "in_progress" | "completed" | "cancelled";
 
@@ -202,7 +200,7 @@ const RequestDetailPanel = ({ request, userId, onClose, onStatusChange }: Props)
             <div className="grid grid-cols-2 gap-3">
               <div className="p-3 rounded-lg bg-muted/50 space-y-1">
                 <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                  <Car className="w-3.5 h-3.5" /> Vehicle
+                  <CarLogo className="w-3.5 h-3.5" /> Vehicle
                 </div>
                 <p className="text-sm font-medium text-foreground">
                   {request.vehicle_color} {request.vehicle_make} {request.vehicle_model}

@@ -8,12 +8,13 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "@/components/ui/use-toast";
-import { Car, User, Phone, Mail, Clock, MapPin } from "lucide-react";
+import { User, Phone, Mail, Clock, MapPin } from "lucide-react";
 import VehicleSelector from "@/components/VehicleSelector";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { z } from "zod";
 import { supabase } from "@/integrations/supabase/client";
 import { US_STATES } from "@/data/usStates";
+import CarLogo from "@/components/CarLogo";
 
 const parkingFormSchema = z.object({
   firstName: z.string().trim().min(1, "First name is required").max(50, "First name must be less than 50 characters"),
@@ -156,7 +157,7 @@ const ParkingForm = () => {
         <Card className="max-w-2xl mx-auto glass-card border-border/50">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <Car className="w-5 h-5 text-secondary" />
+              <CarLogo className="w-5 h-5 text-secondary" />
               Parking Request Form
             </CardTitle>
             <CardDescription>
@@ -234,7 +235,7 @@ const ParkingForm = () => {
               {/* Vehicle Information */}
               <div className="space-y-4">
                 <div className="flex items-center gap-2 text-sm font-medium text-foreground">
-                  <Car className="w-4 h-4 text-secondary" />
+                  <CarLogo className="w-4 h-4 text-secondary" />
                   Vehicle Information
                 </div>
                 

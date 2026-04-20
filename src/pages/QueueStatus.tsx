@@ -5,7 +5,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { Users, Clock, MapPin, CheckCircle, Car, ArrowLeft, RefreshCw } from "lucide-react";
+import { Users, Clock, MapPin, CheckCircle, ArrowLeft, RefreshCw } from "lucide-react";
+import CarLogo from "@/components/CarLogo";
 
 interface QueueData {
   found: boolean;
@@ -27,7 +28,7 @@ const locationLabels: Record<string, string> = {
 const statusDisplay: Record<string, { label: string; color: string; icon: React.ReactNode }> = {
   pending: { label: "Checked In — Waiting", color: "bg-amber-100 text-amber-800 border-amber-300", icon: <Clock className="w-4 h-4" /> },
   confirmed: { label: "Confirmed — In Queue", color: "bg-blue-100 text-blue-800 border-blue-300", icon: <Users className="w-4 h-4" /> },
-  in_progress: { label: "Your Car is Being Parked", color: "bg-purple-100 text-purple-800 border-purple-300", icon: <Car className="w-4 h-4" /> },
+  in_progress: { label: "Your Car is Being Parked", color: "bg-purple-100 text-purple-800 border-purple-300", icon: <CarLogo className="w-4 h-4" /> },
   completed: { label: "Completed", color: "bg-green-100 text-green-800 border-green-300", icon: <CheckCircle className="w-4 h-4" /> },
   cancelled: { label: "Cancelled", color: "bg-red-100 text-red-800 border-red-300", icon: <Clock className="w-4 h-4" /> },
 };

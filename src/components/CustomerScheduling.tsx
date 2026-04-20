@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { format } from "date-fns";
-import { CalendarIcon, Clock, Car, MapPin } from "lucide-react";
+import { CalendarIcon, Clock, MapPin } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,6 +14,7 @@ import { toast } from "@/components/ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import VehicleSelector from "@/components/VehicleSelector";
 import { US_STATES } from "@/data/usStates";
+import CarLogo from "@/components/CarLogo";
 
 const timeSlots = [
   "07:00", "07:30", "08:00", "08:30", "09:00", "09:30",
@@ -113,7 +114,7 @@ const CustomerScheduling = ({ onSuccess }: CustomerSchedulingProps = {}) => {
         <Card className="max-w-3xl mx-auto glass-card border-border/50">
           <CardHeader>
             <CardTitle className="font-display flex items-center gap-2">
-              <Car className="w-5 h-5 text-secondary" />
+              <CarLogo className="w-5 h-5 text-secondary" />
               Schedule Valet Pickup
             </CardTitle>
             <CardDescription>Choose your preferred date, time, and provide vehicle details</CardDescription>

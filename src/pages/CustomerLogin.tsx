@@ -6,7 +6,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "@/components/ui/use-toast";
-import { LogIn, UserPlus, Car } from "lucide-react";
+import { LogIn, UserPlus } from "lucide-react";
+import CarLogo from "@/components/CarLogo";
 
 const CustomerLogin = () => {
   const [email, setEmail] = useState("");
@@ -49,7 +50,7 @@ const CustomerLogin = () => {
       <Card className="w-full max-w-md glass-card border-border/50">
         <CardHeader className="text-center">
           <div className="mx-auto mb-4 w-12 h-12 rounded-full bg-secondary/10 flex items-center justify-center">
-            <Car className="w-6 h-6 text-secondary" />
+            <CarLogo className="w-6 h-6 text-secondary" />
           </div>
           <CardTitle className="font-display text-2xl">
             {isSignUp ? "Create Account" : "Customer Sign In"}

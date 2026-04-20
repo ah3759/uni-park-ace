@@ -1,5 +1,6 @@
-import { MapPin, Car, Clock, Bell, CheckCircle2 } from "lucide-react";
+import { MapPin, Clock, Bell, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import CarLogo from "@/components/CarLogo";
 
 const TrackingSystem = () => {
   const parkingSpots = [
@@ -48,7 +49,7 @@ const TrackingSystem = () => {
             <div className="space-y-6">
               <div className="flex gap-4">
                 <div className="w-12 h-12 rounded-xl bg-secondary/10 flex items-center justify-center flex-shrink-0">
-                  <Car className="w-6 h-6 text-secondary" />
+                  <CarLogo className="w-6 h-6 text-secondary" />
                 </div>
                 <div>
                   <h4 className="font-display font-semibold text-foreground mb-1">Live Location</h4>
@@ -113,7 +114,7 @@ const TrackingSystem = () => {
                   >
                     <span className="text-xs font-medium text-muted-foreground mb-1">{spot.id}</span>
                     {spot.car ? (
-                      <Car className="w-6 h-6 text-primary" />
+                      <CarLogo className="w-6 h-6 text-primary" />
                     ) : spot.status === "reserved" ? (
                       <Clock className="w-6 h-6 text-muted-foreground" />
                     ) : (

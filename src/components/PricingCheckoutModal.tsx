@@ -5,11 +5,12 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { Loader2, Car } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { toast } from "@/components/ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import VehicleSelector from "@/components/VehicleSelector";
 import { US_STATES } from "@/data/usStates";
+import CarLogo from "@/components/CarLogo";
 
 interface PricingCheckoutModalProps {
   open: boolean;
@@ -123,7 +124,7 @@ const PricingCheckoutModal = ({ open, onOpenChange, plan }: PricingCheckoutModal
       <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="font-display flex items-center gap-2">
-            <Car className="w-5 h-5 text-secondary" />
+            <CarLogo className="w-5 h-5 text-secondary" />
             {plan.name} — {plan.price} {plan.period}
           </DialogTitle>
           <DialogDescription>

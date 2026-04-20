@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Menu, X, Car } from "lucide-react";
+import { Menu, X } from "lucide-react";
+import CarLogo from "@/components/CarLogo";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -22,7 +23,7 @@ const Navbar = () => {
           {/* Logo */}
           <a href="#" className="flex items-center gap-2 group">
             <div className="w-10 h-10 accent-gradient rounded-xl flex items-center justify-center shadow-glow transition-transform group-hover:scale-110">
-              <Car className="w-5 h-5 text-accent-foreground" />
+              <CarLogo className="w-5 h-5 text-accent-foreground" />
             </div>
             <span className="font-display text-xl font-bold text-foreground">
               UNi<span className="text-gradient">Vale</span>

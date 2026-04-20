@@ -7,9 +7,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "@/components/ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { Car, Plus } from "lucide-react";
+import { Plus } from "lucide-react";
 import VehicleSelector from "@/components/VehicleSelector";
 import { US_STATES } from "@/data/usStates";
+import CarLogo from "@/components/CarLogo";
 
 interface CustomerNewRequestProps {
   userEmail: string;
@@ -185,7 +186,7 @@ const CustomerNewRequest = ({ userEmail, onSuccess }: CustomerNewRequestProps) =
           </div>
 
           <Button type="submit" className="w-full" disabled={isSubmitting}>
-            <Car className="w-4 h-4 mr-2" />
+            <CarLogo className="w-4 h-4 mr-2" />
             {isSubmitting ? "Submitting..." : "Submit Valet Request"}
           </Button>
         </form>

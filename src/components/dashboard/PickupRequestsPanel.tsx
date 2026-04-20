@@ -4,8 +4,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/use-toast";
-import { Bell, Car, MapPin, Clock, CheckCircle2 } from "lucide-react";
+import { Bell, MapPin, Clock, CheckCircle2 } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
+import CarLogo from "@/components/CarLogo";
 
 interface PickupPing {
   id: string;
@@ -165,7 +166,7 @@ const PickupRequestsPanel = ({ profileId }: { profileId: string | null }) => {
               {r && (
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-sm">
                   <div className="flex items-start gap-2">
-                    <Car className="w-4 h-4 mt-0.5 text-muted-foreground" />
+                    <CarLogo className="w-4 h-4 mt-0.5 text-muted-foreground" />
                     <div>
                       <p className="font-medium text-foreground">
                         {r.vehicle_color} {r.vehicle_make} {r.vehicle_model}

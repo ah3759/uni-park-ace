@@ -12,13 +12,14 @@ import { Label } from "@/components/ui/label";
 import { toast } from "@/components/ui/use-toast";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
-import { LogOut, Car, Search, Clock, CheckCircle, XCircle, PlayCircle, AlertCircle, RefreshCw, Shield, ClipboardCheck, Plus, Pencil, Trash2, CalendarDays, List } from "lucide-react";
+import { LogOut, Search, Clock, CheckCircle, XCircle, PlayCircle, AlertCircle, RefreshCw, Shield, ClipboardCheck, Plus, Pencil, Trash2, CalendarDays, List } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import InspectionWorkflow from "@/components/inspection/InspectionWorkflow";
 import RequestDetailPanel from "@/components/dashboard/RequestDetailPanel";
 import ScheduleCalendar from "@/components/schedule/ScheduleCalendar";
 import PickupRequestsPanel from "@/components/dashboard/PickupRequestsPanel";
 import { US_STATES } from "@/data/usStates";
+import CarLogo from "@/components/CarLogo";
 
 type RequestStatus = "pending" | "confirmed" | "in_progress" | "completed" | "cancelled";
 
@@ -282,7 +283,7 @@ const Dashboard = () => {
       <header className="border-b border-border bg-card">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <Car className="w-6 h-6 text-secondary" />
+            <CarLogo className="w-6 h-6 text-secondary" />
             <h1 className="font-display text-xl font-bold text-foreground">Valet Dashboard</h1>
           </div>
           <div className="flex items-center gap-3">

@@ -3,8 +3,9 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { ChevronLeft, ChevronRight, CalendarDays, MapPin, Clock, User, Car, FileText, Phone, Mail } from "lucide-react";
+import { ChevronLeft, ChevronRight, CalendarDays, MapPin, Clock, User, FileText, Phone, Mail } from "lucide-react";
 import {
+import CarLogo from "@/components/CarLogo";
   Popover,
   PopoverContent,
   PopoverTrigger,
@@ -381,7 +382,7 @@ const EventCard = ({ event, showFullDetails }: EventCardProps) => {
             )}
             {event.vehicle && (
               <div className="flex items-center gap-2">
-                <Car className="h-3 w-3 text-muted-foreground shrink-0" />
+                <CarLogo className="h-3 w-3 text-muted-foreground shrink-0" />
                 <span className="truncate">
                   {event.vehicle}
                   {event.licensePlate ? ` · ${event.licensePlate}` : ""}
