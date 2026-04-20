@@ -280,7 +280,15 @@ const CustomerDashboard = () => {
   );
 };
 
-const RequestCard = ({ request }: { request: ParkingRequest }) => {
+const RequestCard = ({
+  request,
+  userEmail,
+  userName,
+}: {
+  request: ParkingRequest;
+  userEmail: string;
+  userName: string;
+}) => {
   const config = statusConfig[request.status] || { label: request.status, className: "" };
   return (
     <Card className="glass-card border-border/50">
@@ -310,6 +318,16 @@ const RequestCard = ({ request }: { request: ParkingRequest }) => {
         </div>
         {request.special_instructions && (
           <p className="mt-2 text-sm text-muted-foreground italic">"{request.special_instructions}"</p>
+        )}
+        {userEmail && (
+          <div className="mt-4 pt-4 border-t border-border/50">
+            <PickupRequestButton
+              parkingRequestId={request.id}
+              customerEmail={userEmail}
+              customerName={userName}
+              requestStatus={request.status}
+            />
+          </div>
         )}
       </CardContent>
     </Card>
