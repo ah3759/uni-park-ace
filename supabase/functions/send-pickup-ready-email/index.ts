@@ -73,17 +73,19 @@ Deno.serve(async (req) => {
     const vehicleInfo = `${request.vehicle_color} ${request.vehicle_make} ${request.vehicle_model}`
     const locationLabel = LOCATION_LABELS[request.pickup_location] || request.pickup_location
 
-    // Trigger transactional email
+    // Trigger transactional email (use anon key — send-transactional-email has verify_jwt = true)
+    const anonKey = Deno.env.get('SUPABASE_ANON_KEY')!
     const emailRes = await fetch(`${supabaseUrl}/functions/v1/send-transactional-email`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')}`,
+        Authorization: `Bearer ${anonKey}`,
+        apikey: anonKey,
       },
       body: JSON.stringify({
         templateName: 'pickup-ready',
-        to: request.email,
-        data: {
+        recipientEmail: request.email,
+        templateData: {
           customerName: request.first_name,
           vehicleInfo,
           pickupLocation: locationLabel,
