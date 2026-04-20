@@ -256,6 +256,26 @@ const RequestDetailPanel = ({ request, userId, onClose, onStatusChange }: Props)
                     {statusConfig[s].label}
                   </Button>
                 ))}
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  className="text-xs gap-1"
+                  onClick={async () => {
+                    try {
+                      const { error } = await supabase.functions.invoke("send-pickup-ready-email", {
+                        body: { requestId: request.id },
+                      });
+                      if (error) throw error;
+                      toast({ title: "Parked — pickup-ready email sent", description: `Sent to ${request.email}` });
+                      onStatusChange(request.id, "in_progress");
+                    } catch (err: any) {
+                      toast({ title: "Failed to send pickup email", description: err.message, variant: "destructive" });
+                    }
+                  }}
+                >
+                  <ParkingSquare className="h-3 w-3" />
+                  Mark Parked & Email Customer
+                </Button>
               </div>
             </div>
 
