@@ -8,7 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "@/components/ui/use-toast";
 import {
   X, Phone, Mail, MapPin, Car, Clock, MessageSquare,
-  Camera, ParkingSquare, FileText, User,
+  Camera, ParkingSquare, FileText, User, CreditCard, CheckCircle2, DollarSign,
 } from "lucide-react";
 
 type RequestStatus = "pending" | "confirmed" | "in_progress" | "completed" | "cancelled";
@@ -275,6 +275,57 @@ const RequestDetailPanel = ({ request, userId, onClose, onStatusChange }: Props)
                 >
                   <ParkingSquare className="h-3 w-3" />
                   Mark Parked & Email Customer
+                </Button>
+              </div>
+            </div>
+
+            {/* Complete & Charge */}
+            <div className="rounded-lg border border-border bg-muted/30 p-3 space-y-2">
+              <h3 className="text-xs font-medium text-muted-foreground uppercase tracking-wider flex items-center gap-1.5">
+                <DollarSign className="w-3.5 h-3.5" /> Complete & Charge
+              </h3>
+              <p className="text-xs text-muted-foreground">
+                Choose how to collect payment from {request.first_name}.
+              </p>
+              <div className="flex flex-wrap gap-2 pt-1">
+                <Button
+                  size="sm"
+                  variant="default"
+                  className="text-xs gap-1"
+                  onClick={async () => {
+                    try {
+                      onStatusChange(request.id, "completed");
+                      toast({ title: "Marked completed (paid in-person)", description: `${request.first_name}'s request closed.` });
+                    } catch (err: any) {
+                      toast({ title: "Error", description: err.message, variant: "destructive" });
+                    }
+                  }}
+                >
+                  <CheckCircle2 className="h-3 w-3" />
+                  Mark Paid In-Person
+                </Button>
+                <Button
+                  size="sm"
+                  variant="secondary"
+                  className="text-xs gap-1"
+                  onClick={async () => {
+                    try {
+                      const { data, error } = await supabase.functions.invoke("send-payment-link", {
+                        body: { requestId: request.id, planId: "pay-per-use" },
+                      });
+                      if (error) throw error;
+                      if (!data?.success) throw new Error(data?.error || "Failed to send payment link");
+                      toast({
+                        title: "Payment link emailed",
+                        description: `Stripe checkout sent to ${request.email}`,
+                      });
+                    } catch (err: any) {
+                      toast({ title: "Failed to email payment link", description: err.message, variant: "destructive" });
+                    }
+                  }}
+                >
+                  <CreditCard className="h-3 w-3" />
+                  Email Stripe Payment Link
                 </Button>
               </div>
             </div>

@@ -5,11 +5,14 @@ import type { TemplateEntry } from './registry.ts'
 
 interface Props {
   customerName?: string
+  firstName?: string
   status?: string
   vehicleInfo?: string
   message?: string
   siteName?: string
   dashboardUrl?: string
+  ctaUrl?: string
+  ctaLabel?: string
 }
 
 const STATUS_LABELS: Record<string, string> = {
@@ -21,36 +24,44 @@ const STATUS_LABELS: Record<string, string> = {
 }
 
 const StatusUpdateEmail = ({
-  customerName = 'Valued Customer',
+  customerName,
+  firstName,
   status = 'confirmed',
   vehicleInfo = 'your vehicle',
   message = '',
   siteName = 'UniVale',
-  dashboardUrl = 'https://univale.lovable.app/customer-login',
-}: Props) => (
-  <Html>
-    <Head />
-    <Body style={main}>
-      <Container style={container}>
-        <Text style={heading}>Request Update</Text>
-        <Text style={paragraph}>
-          Hey {customerName}, your valet request for {vehicleInfo} has been updated.
-        </Text>
-        <Section style={statusBox}>
-          <Text style={statusText}>
-            Status: {STATUS_LABELS[status] || status}
+  dashboardUrl = 'https://univale.app/customer-login',
+  ctaUrl,
+  ctaLabel,
+}: Props) => {
+  const name = firstName || customerName || 'Valued Customer'
+  const buttonHref = ctaUrl || dashboardUrl
+  const buttonLabel = ctaLabel || 'View Dashboard'
+  return (
+    <Html>
+      <Head />
+      <Body style={main}>
+        <Container style={container}>
+          <Text style={heading}>Request Update</Text>
+          <Text style={paragraph}>
+            Hey {name}, your valet request for {vehicleInfo} has been updated.
           </Text>
-        </Section>
-        {message && <Text style={paragraph}>{message}</Text>}
-        <Button style={button} href={dashboardUrl}>
-          View Dashboard
-        </Button>
-        <Hr style={hr} />
-        <Text style={footer}>— The {siteName} Team</Text>
-      </Container>
-    </Body>
-  </Html>
-)
+          <Section style={statusBox}>
+            <Text style={statusText}>
+              Status: {STATUS_LABELS[status] || status}
+            </Text>
+          </Section>
+          {message && <Text style={paragraph}>{message}</Text>}
+          <Button style={button} href={buttonHref}>
+            {buttonLabel}
+          </Button>
+          <Hr style={hr} />
+          <Text style={footer}>— The {siteName} Team</Text>
+        </Container>
+      </Body>
+    </Html>
+  )
+}
 
 const main = { backgroundColor: '#f5f6f8', fontFamily: "'Inter', Arial, sans-serif", padding: '40px 0' }
 const container = { backgroundColor: '#ffffff', borderRadius: '12px', padding: '40px', maxWidth: '560px', margin: '0 auto' }
