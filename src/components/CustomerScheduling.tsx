@@ -23,7 +23,11 @@ const timeSlots = [
   "19:00", "19:30", "20:00", "20:30", "21:00",
 ];
 
-const CustomerScheduling = () => {
+interface CustomerSchedulingProps {
+  onSuccess?: () => void;
+}
+
+const CustomerScheduling = ({ onSuccess }: CustomerSchedulingProps = {}) => {
   const [date, setDate] = useState<Date>();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [form, setForm] = useState({
@@ -86,6 +90,7 @@ const CustomerScheduling = () => {
         special_instructions: "",
       });
       setDate(undefined);
+      onSuccess?.();
     }
   };
 
