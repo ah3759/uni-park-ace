@@ -85,6 +85,13 @@ const Dashboard = () => {
   
   const [inspectingRequest, setInspectingRequest] = useState<ParkingRequest | null>(null);
   const [detailRequest, setDetailRequest] = useState<ParkingRequest | null>(null);
+  const [profileId, setProfileId] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!user) return;
+    supabase.from("profiles").select("id").eq("user_id", user.id).maybeSingle()
+      .then(({ data }) => setProfileId(data?.id ?? null));
+  }, [user]);
 
   // Create / Edit form state
   const [formOpen, setFormOpen] = useState(false);
@@ -293,6 +300,8 @@ const Dashboard = () => {
       </header>
 
       <main className="container mx-auto px-4 py-6 space-y-6">
+        {/* Active pickup request alerts (realtime) */}
+        <PickupRequestsPanel profileId={profileId} />
         {/* Stats */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {[
