@@ -17,6 +17,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import InspectionWorkflow from "@/components/inspection/InspectionWorkflow";
 import RequestDetailPanel from "@/components/dashboard/RequestDetailPanel";
 import ScheduleCalendar from "@/components/schedule/ScheduleCalendar";
+import PickupRequestsPanel from "@/components/dashboard/PickupRequestsPanel";
 import { US_STATES } from "@/data/usStates";
 
 type RequestStatus = "pending" | "confirmed" | "in_progress" | "completed" | "cancelled";
