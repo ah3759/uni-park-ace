@@ -19,3 +19,9 @@ TEMPLATES['status-update'] = statusUpdate
 
 import { template as valetNotification } from './valet-notification.tsx'
 TEMPLATES['valet-notification'] = valetNotification
+
+import { template as pickupReady } from './pickup-ready.tsx'
+TEMPLATES['pickup-ready'] = pickupReady
+
+import { template as pickupReminder } from './pickup-reminder.tsx'
+TEMPLATES['pickup-reminder'] = pickupReminder

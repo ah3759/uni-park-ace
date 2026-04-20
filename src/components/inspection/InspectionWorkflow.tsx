@@ -143,19 +143,10 @@ const InspectionWorkflow = ({
         .update({ status: "in_progress" as any })
         .eq("id", requestId);
 
-      // Send status notification
+      // Send "your car is parked — request pickup when ready" email with tokenized link
       try {
-        await supabase.functions.invoke("send-transactional-email", {
-          body: {
-            templateName: "status-update",
-            to: undefined, // Will be filled by the edge function from the request
-            data: {
-              customerName,
-              status: "in_progress",
-              vehicleInfo,
-              message: "Your vehicle has been inspected and is now being parked by our valet team.",
-            },
-          },
+        await supabase.functions.invoke("send-pickup-ready-email", {
+          body: { requestId },
         });
       } catch {
         // Non-critical if email fails

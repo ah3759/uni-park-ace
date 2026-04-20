@@ -13,3 +13,9 @@ project_id = "bybmqowskjhedktacdqf"
     verify_jwt = false
   [functions.handle-email-suppression]
     verify_jwt = false
+  [functions.request-pickup]
+    verify_jwt = false
+  [functions.send-pickup-ready-email]
+    verify_jwt = false
+  [functions.send-schedule-reminders]
+    verify_jwt = false

@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Car, Clock, CreditCard, Crown, LogOut, History, Package, Plus } from "lucide-react";
 import CustomerNewRequest from "@/components/CustomerNewRequest";
+import PickupRequestButton from "@/components/PickupRequestButton";
 
 interface ParkingRequest {
   id: string;
@@ -178,7 +179,12 @@ const CustomerDashboard = () => {
               </Card>
             ) : (
               activeRequests.map((req) => (
-                <RequestCard key={req.id} request={req} />
+                <RequestCard
+                  key={req.id}
+                  request={req}
+                  userEmail={user?.email ?? ""}
+                  userName={displayName}
+                />
               ))
             )}
           </TabsContent>
@@ -194,7 +200,12 @@ const CustomerDashboard = () => {
               </Card>
             ) : (
               completedRequests.map((req) => (
-                <RequestCard key={req.id} request={req} />
+                <RequestCard
+                  key={req.id}
+                  request={req}
+                  userEmail={user?.email ?? ""}
+                  userName={displayName}
+                />
               ))
             )}
           </TabsContent>
@@ -269,7 +280,15 @@ const CustomerDashboard = () => {
   );
 };
 
-const RequestCard = ({ request }: { request: ParkingRequest }) => {
+const RequestCard = ({
+  request,
+  userEmail,
+  userName,
+}: {
+  request: ParkingRequest;
+  userEmail: string;
+  userName: string;
+}) => {
   const config = statusConfig[request.status] || { label: request.status, className: "" };
   return (
     <Card className="glass-card border-border/50">
@@ -299,6 +318,16 @@ const RequestCard = ({ request }: { request: ParkingRequest }) => {
         </div>
         {request.special_instructions && (
           <p className="mt-2 text-sm text-muted-foreground italic">"{request.special_instructions}"</p>
+        )}
+        {userEmail && (
+          <div className="mt-4 pt-4 border-t border-border/50">
+            <PickupRequestButton
+              parkingRequestId={request.id}
+              customerEmail={userEmail}
+              customerName={userName}
+              requestStatus={request.status}
+            />
+          </div>
         )}
       </CardContent>
     </Card>
