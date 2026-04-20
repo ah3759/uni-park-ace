@@ -238,7 +238,7 @@ const ScheduleCalendar = ({ showFullDetails = false }: ScheduleCalendarProps) =>
                 return (
                   <div
                     key={si}
-                    className={`grid grid-cols-[80px_repeat(5,1fr)] ${
+                    className={`grid grid-cols-[80px_repeat(7,1fr)] ${
                       isHourMark ? "border-t" : "border-t border-dashed border-border/40"
                     }`}
                   >
