@@ -135,7 +135,7 @@ const ScheduleCalendar = ({ showFullDetails = false }: ScheduleCalendarProps) =>
 
   // Bucket events into a [dayIndex][slotIndex] grid
   const grid = useMemo(() => {
-    const g: ScheduleEvent[][][] = Array.from({ length: 5 }, () =>
+    const g: ScheduleEvent[][][] = Array.from({ length: 7 }, () =>
       Array.from({ length: slots.length }, () => [])
     );
     for (const ev of events) {
