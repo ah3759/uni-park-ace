@@ -67,7 +67,7 @@ const Schedule = () => {
                   Back to schedule
                 </Button>
               </div>
-              <CustomerScheduling />
+              <CustomerScheduling onSuccess={() => setView("calendar")} />
             </div>
           )}
         </div>
