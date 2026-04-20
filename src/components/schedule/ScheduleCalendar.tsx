@@ -178,26 +178,30 @@ const ScheduleCalendar = ({ showFullDetails = false }: ScheduleCalendarProps) =>
         <div className="flex items-center gap-2 text-sm text-muted-foreground">
           <Badge variant="secondary" className="gap-1">
             <Clock className="h-3 w-3" />
-            {totalBookings} {totalBookings === 1 ? "booking" : "bookings"} this week
+            {showFullDetails
+              ? `${totalBookings} ${totalBookings === 1 ? "booking" : "bookings"} this week`
+              : `${totalBookings} ${totalBookings === 1 ? "slot" : "slots"} unavailable`}
           </Badge>
           {loading && <span className="text-xs">Updating…</span>}
         </div>
       </div>
 
-      {/* Location color legend */}
-      <Card className="p-3">
-        <div className="flex flex-wrap gap-x-4 gap-y-2 text-xs">
-          {Object.entries(LOCATION_LABELS).map(([key, label]) => {
-            const style = LOCATION_STYLES[key] ?? FALLBACK_STYLE;
-            return (
-              <div key={key} className="flex items-center gap-1.5">
-                <span className={`h-2.5 w-2.5 rounded-full ${style.dot}`} />
-                <span className="text-muted-foreground">{label}</span>
-              </div>
-            );
-          })}
-        </div>
-      </Card>
+      {/* Location color legend (employee view only) */}
+      {showFullDetails && (
+        <Card className="p-3">
+          <div className="flex flex-wrap gap-x-4 gap-y-2 text-xs">
+            {Object.entries(LOCATION_LABELS).map(([key, label]) => {
+              const style = LOCATION_STYLES[key] ?? FALLBACK_STYLE;
+              return (
+                <div key={key} className="flex items-center gap-1.5">
+                  <span className={`h-2.5 w-2.5 rounded-full ${style.dot}`} />
+                  <span className="text-muted-foreground">{label}</span>
+                </div>
+              );
+            })}
+          </div>
+        </Card>
+      )}
 
       {/* Calendar grid */}
       <Card className="overflow-hidden">
@@ -290,6 +294,21 @@ const EventCard = ({ event, showFullDetails }: EventCardProps) => {
   const style = LOCATION_STYLES[event.location] ?? FALLBACK_STYLE;
   const locationLabel = LOCATION_LABELS[event.location] ?? event.location;
 
+  // PUBLIC VIEW: hide all booking details (location, time, customer info).
+  // Render a plain muted "Unavailable" block so available slots stand out.
+  if (!showFullDetails) {
+    return (
+      <div
+        className="rounded-md px-2 py-1 text-[11px] bg-muted text-muted-foreground/70 border border-border/40 cursor-not-allowed select-none"
+        aria-label="Unavailable time slot"
+        title="Unavailable"
+      >
+        Unavailable
+      </div>
+    );
+  }
+
+  // EMPLOYEE VIEW: full color-coded card with popover containing all details.
   const cardContent = (
     <div
       className={`rounded-md px-2 py-1 text-xs cursor-pointer transition-colors ${style.bg} ${style.border}`}
@@ -302,7 +321,7 @@ const EventCard = ({ event, showFullDetails }: EventCardProps) => {
         <MapPin className="h-3 w-3 shrink-0 text-muted-foreground" />
         <span className="truncate">{style.label}</span>
       </div>
-      {showFullDetails && event.customerName && (
+      {event.customerName && (
         <div className="text-muted-foreground truncate mt-0.5 flex items-center gap-1">
           <User className="h-3 w-3 shrink-0" />
           <span className="truncate">{event.customerName}</span>
@@ -327,63 +346,57 @@ const EventCard = ({ event, showFullDetails }: EventCardProps) => {
                 {event.time}
               </div>
             </div>
-            {event.status && showFullDetails && (
+            {event.status && (
               <Badge variant="outline" className="text-[10px] capitalize">
                 {event.status.replace("_", " ")}
               </Badge>
             )}
           </div>
 
-          {showFullDetails ? (
-            <div className="space-y-1.5 pt-2 border-t text-xs">
-              {event.customerName && (
-                <div className="flex items-center gap-2">
-                  <User className="h-3 w-3 text-muted-foreground shrink-0" />
-                  <span>{event.customerName}</span>
-                </div>
-              )}
-              {event.customerPhone && (
-                <div className="flex items-center gap-2">
-                  <Phone className="h-3 w-3 text-muted-foreground shrink-0" />
-                  <a href={`tel:${event.customerPhone}`} className="hover:underline">
-                    {event.customerPhone}
-                  </a>
-                </div>
-              )}
-              {event.customerEmail && (
-                <div className="flex items-center gap-2">
-                  <Mail className="h-3 w-3 text-muted-foreground shrink-0" />
-                  <a
-                    href={`mailto:${event.customerEmail}`}
-                    className="hover:underline truncate"
-                  >
-                    {event.customerEmail}
-                  </a>
-                </div>
-              )}
-              {event.vehicle && (
-                <div className="flex items-center gap-2">
-                  <Car className="h-3 w-3 text-muted-foreground shrink-0" />
-                  <span className="truncate">
-                    {event.vehicle}
-                    {event.licensePlate ? ` · ${event.licensePlate}` : ""}
-                  </span>
-                </div>
-              )}
-              {event.specialInstructions && (
-                <div className="flex items-start gap-2 pt-1">
-                  <FileText className="h-3 w-3 text-muted-foreground shrink-0 mt-0.5" />
-                  <span className="text-muted-foreground italic">
-                    {event.specialInstructions}
-                  </span>
-                </div>
-              )}
-            </div>
-          ) : (
-            <p className="text-xs text-muted-foreground pt-2 border-t">
-              Slot booked. Personal details are private.
-            </p>
-          )}
+          <div className="space-y-1.5 pt-2 border-t text-xs">
+            {event.customerName && (
+              <div className="flex items-center gap-2">
+                <User className="h-3 w-3 text-muted-foreground shrink-0" />
+                <span>{event.customerName}</span>
+              </div>
+            )}
+            {event.customerPhone && (
+              <div className="flex items-center gap-2">
+                <Phone className="h-3 w-3 text-muted-foreground shrink-0" />
+                <a href={`tel:${event.customerPhone}`} className="hover:underline">
+                  {event.customerPhone}
+                </a>
+              </div>
+            )}
+            {event.customerEmail && (
+              <div className="flex items-center gap-2">
+                <Mail className="h-3 w-3 text-muted-foreground shrink-0" />
+                <a
+                  href={`mailto:${event.customerEmail}`}
+                  className="hover:underline truncate"
+                >
+                  {event.customerEmail}
+                </a>
+              </div>
+            )}
+            {event.vehicle && (
+              <div className="flex items-center gap-2">
+                <Car className="h-3 w-3 text-muted-foreground shrink-0" />
+                <span className="truncate">
+                  {event.vehicle}
+                  {event.licensePlate ? ` · ${event.licensePlate}` : ""}
+                </span>
+              </div>
+            )}
+            {event.specialInstructions && (
+              <div className="flex items-start gap-2 pt-1">
+                <FileText className="h-3 w-3 text-muted-foreground shrink-0 mt-0.5" />
+                <span className="text-muted-foreground italic">
+                  {event.specialInstructions}
+                </span>
+              </div>
+            )}
+          </div>
         </div>
       </PopoverContent>
     </Popover>
