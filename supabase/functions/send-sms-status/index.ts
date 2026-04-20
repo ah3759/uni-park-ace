@@ -43,6 +43,16 @@ Deno.serve(async (req) => {
       formattedPhone = `+${formattedPhone}`;
     }
 
+    // Validate: must be E.164 with 10–15 digits. Skip short codes / invalid numbers gracefully.
+    const digitsOnly = formattedPhone.replace(/\D/g, "");
+    if (digitsOnly.length < 10 || digitsOnly.length > 15) {
+      console.warn(`Skipping SMS — invalid phone number: ${phone}`);
+      return new Response(
+        JSON.stringify({ success: false, skipped: true, reason: "invalid_phone_number", phone }),
+        { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
     const messageTemplate = STATUS_MESSAGES[status];
     if (!messageTemplate) {
       return new Response(
