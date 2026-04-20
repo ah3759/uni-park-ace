@@ -4,7 +4,6 @@ import Services from "@/components/Services";
 import TimeGuarantee from "@/components/TimeGuarantee";
 import Pricing from "@/components/Pricing";
 import ParkingForm from "@/components/ParkingForm";
-import CustomerScheduling from "@/components/CustomerScheduling";
 import BusinessBooking from "@/components/BusinessBooking";
 import ContactInquiry from "@/components/ContactInquiry";
 import Partnerships from "@/components/Partnerships";
@@ -18,7 +17,6 @@ const Index = () => {
       <Hero />
       <ParkingForm />
       <Services />
-      <CustomerScheduling />
       <TimeGuarantee />
       <Pricing />
       <BusinessBooking />

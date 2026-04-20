@@ -45,7 +45,7 @@ const Hero = () => {
               Start Parking Smarter Now
               <ArrowRight className="w-5 h-5" />
             </Button>
-            <Button variant="heroOutline" size="xl" onClick={() => document.getElementById('schedule')?.scrollIntoView({ behavior: 'smooth' })}>
+            <Button variant="heroOutline" size="xl" onClick={() => { window.location.assign('/schedule'); }}>
               Schedule a Pickup
             </Button>
           </div>
