@@ -38,7 +38,7 @@ const ScheduleCalendar = ({ showFullDetails = false }: ScheduleCalendarProps) =>
   const slots = useMemo(() => generateTimeSlots(), []);
 
   const weekEnd = useMemo(() => {
-    const e = addDays(weekStart, 5);
+    const e = addDays(weekStart, 7);
     e.setHours(0, 0, 0, 0);
     return e;
   }, [weekStart]);
@@ -135,7 +135,7 @@ const ScheduleCalendar = ({ showFullDetails = false }: ScheduleCalendarProps) =>
 
   // Bucket events into a [dayIndex][slotIndex] grid
   const grid = useMemo(() => {
-    const g: ScheduleEvent[][][] = Array.from({ length: 5 }, () =>
+    const g: ScheduleEvent[][][] = Array.from({ length: 7 }, () =>
       Array.from({ length: slots.length }, () => [])
     );
     for (const ev of events) {
@@ -204,7 +204,7 @@ const ScheduleCalendar = ({ showFullDetails = false }: ScheduleCalendarProps) =>
         <div className="overflow-x-auto">
           <div className="min-w-[760px]">
             {/* Header row */}
-            <div className="grid grid-cols-[80px_repeat(5,1fr)] border-b bg-muted/30 sticky top-0 z-10">
+            <div className="grid grid-cols-[80px_repeat(7,1fr)] border-b bg-muted/30 sticky top-0 z-10">
               <div className="px-2 py-3 text-xs font-medium text-muted-foreground">Time</div>
               {DAYS.map((d, i) => {
                 const dayDate = addDays(weekStart, i);
@@ -238,7 +238,7 @@ const ScheduleCalendar = ({ showFullDetails = false }: ScheduleCalendarProps) =>
                 return (
                   <div
                     key={si}
-                    className={`grid grid-cols-[80px_repeat(5,1fr)] ${
+                    className={`grid grid-cols-[80px_repeat(7,1fr)] ${
                       isHourMark ? "border-t" : "border-t border-dashed border-border/40"
                     }`}
                   >
