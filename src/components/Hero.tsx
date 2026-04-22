@@ -52,25 +52,25 @@ const Hero = () => {
 
           {/* Trust Indicators */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-3xl mx-auto animate-fade-in" style={{ animationDelay: "0.6s" }}>
-            <div className="flex items-center justify-center gap-3 p-4 rounded-2xl glass-card border border-secondary/20">
-              <Clock className="w-6 h-6 text-secondary" />
+            <div className="flex items-center justify-center gap-3 p-4 rounded-2xl bg-primary-foreground/10 backdrop-blur-md border border-secondary/40 shadow-lg">
+              <Clock className="w-6 h-6 text-secondary flex-shrink-0" />
               <div className="text-left">
                 <p className="font-display font-semibold text-primary-foreground">5-Min Guarantee</p>
-                <p className="text-sm text-primary-foreground/60">Or your next valet is free</p>
+                <p className="text-sm text-primary-foreground/80">Or your next valet is free</p>
               </div>
             </div>
-            <div className="flex items-center justify-center gap-3 p-4 rounded-2xl glass-card border border-secondary/20">
-              <MapPin className="w-6 h-6 text-secondary" />
+            <div className="flex items-center justify-center gap-3 p-4 rounded-2xl bg-primary-foreground/10 backdrop-blur-md border border-secondary/40 shadow-lg">
+              <MapPin className="w-6 h-6 text-secondary flex-shrink-0" />
               <div className="text-left">
                 <p className="font-display font-semibold text-primary-foreground">Live Tracking</p>
-                <p className="text-sm text-primary-foreground/60">Know where your car is</p>
+                <p className="text-sm text-primary-foreground/80">Know where your car is</p>
               </div>
             </div>
-            <div className="flex items-center justify-center gap-3 p-4 rounded-2xl glass-card border border-secondary/20">
-              <Shield className="w-6 h-6 text-secondary" />
+            <div className="flex items-center justify-center gap-3 p-4 rounded-2xl bg-primary-foreground/10 backdrop-blur-md border border-secondary/40 shadow-lg">
+              <Shield className="w-6 h-6 text-secondary flex-shrink-0" />
               <div className="text-left">
                 <p className="font-display font-semibold text-primary-foreground">Fully Insured</p>
-                <p className="text-sm text-primary-foreground/60">Complete protection</p>
+                <p className="text-sm text-primary-foreground/80">Complete protection</p>
               </div>
             </div>
           </div>
