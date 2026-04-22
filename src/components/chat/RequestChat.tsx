@@ -5,6 +5,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Send, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import type { RealtimeChannel } from "@supabase/supabase-js";
 
 interface Message {
   id: string;
@@ -40,7 +41,12 @@ const RequestChat = ({
   const [input, setInput] = useState("");
   const [sending, setSending] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [otherTyping, setOtherTyping] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const channelRef = useRef<RealtimeChannel | null>(null);
+  const typingTimeoutRef = useRef<number | null>(null);
+  const otherTypingTimeoutRef = useRef<number | null>(null);
+  const lastSentTypingRef = useRef<number>(0);
 
   const readField = viewerRole === "customer" ? "read_by_customer" : "read_by_employee";
 
@@ -71,20 +77,39 @@ const RequestChat = ({
           });
         }
       )
+      .on("broadcast", { event: "typing" }, ({ payload }) => {
+        const p = payload as { role: string };
+        if (p?.role && p.role !== viewerRole) {
+          setOtherTyping(true);
+          if (otherTypingTimeoutRef.current) window.clearTimeout(otherTypingTimeoutRef.current);
+          otherTypingTimeoutRef.current = window.setTimeout(() => setOtherTyping(false), 3000);
+        }
+      })
+      .on("broadcast", { event: "stop_typing" }, ({ payload }) => {
+        const p = payload as { role: string };
+        if (p?.role && p.role !== viewerRole) {
+          setOtherTyping(false);
+          if (otherTypingTimeoutRef.current) window.clearTimeout(otherTypingTimeoutRef.current);
+        }
+      })
       .subscribe();
+    channelRef.current = channel;
 
     return () => {
       active = false;
+      if (typingTimeoutRef.current) window.clearTimeout(typingTimeoutRef.current);
+      if (otherTypingTimeoutRef.current) window.clearTimeout(otherTypingTimeoutRef.current);
       supabase.removeChannel(channel);
+      channelRef.current = null;
     };
-  }, [requestId]);
+  }, [requestId, viewerRole]);
 
   // Auto-scroll on new message
   useEffect(() => {
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }
-  }, [messages.length]);
+  }, [messages.length, otherTyping]);
 
   // Mark incoming messages as read for the viewer
   useEffect(() => {
@@ -107,6 +132,9 @@ const RequestChat = ({
     const body = input.trim();
     if (!body || sending) return;
     setSending(true);
+    // Stop typing indicator immediately on send
+    channelRef.current?.send({ type: "broadcast", event: "stop_typing", payload: { role: viewerRole } });
+    if (typingTimeoutRef.current) window.clearTimeout(typingTimeoutRef.current);
     const { error } = await supabase.from("request_messages").insert({
       request_id: requestId,
       sender_role: viewerRole,
@@ -126,6 +154,23 @@ const RequestChat = ({
         .catch(() => {});
     }
     setSending(false);
+  };
+
+  const handleInputChange = (value: string) => {
+    setInput(value);
+    if (!channelRef.current) return;
+    const now = Date.now();
+    // Throttle: send "typing" at most every 1.5s
+    if (value.length > 0 && now - lastSentTypingRef.current > 1500) {
+      lastSentTypingRef.current = now;
+      channelRef.current.send({ type: "broadcast", event: "typing", payload: { role: viewerRole, name: viewerName } });
+    }
+    // Schedule a "stop_typing" after 2s of inactivity
+    if (typingTimeoutRef.current) window.clearTimeout(typingTimeoutRef.current);
+    typingTimeoutRef.current = window.setTimeout(() => {
+      channelRef.current?.send({ type: "broadcast", event: "stop_typing", payload: { role: viewerRole } });
+      lastSentTypingRef.current = 0;
+    }, 2000);
   };
 
   return (
@@ -172,13 +217,24 @@ const RequestChat = ({
               );
             })
           )}
+          {otherTyping && (
+            <div className="flex items-start">
+              <div className="bg-muted text-foreground rounded-2xl rounded-bl-sm px-3 py-2">
+                <span className="inline-flex gap-1 items-center" aria-label="typing">
+                  <span className="w-1.5 h-1.5 rounded-full bg-muted-foreground/70 animate-bounce [animation-delay:-0.3s]" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-muted-foreground/70 animate-bounce [animation-delay:-0.15s]" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-muted-foreground/70 animate-bounce" />
+                </span>
+              </div>
+            </div>
+          )}
         </div>
       </ScrollArea>
 
       <div className="p-2 border-t border-border/50 bg-background/50 flex gap-2 items-end">
         <Textarea
           value={input}
-          onChange={(e) => setInput(e.target.value)}
+          onChange={(e) => handleInputChange(e.target.value)}
           onKeyDown={(e) => {
             if (e.key === "Enter" && !e.shiftKey) {
               e.preventDefault();
