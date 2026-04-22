@@ -345,6 +345,50 @@ export type Database = {
         }
         Relationships: []
       }
+      request_messages: {
+        Row: {
+          body: string
+          created_at: string
+          id: string
+          read_by_customer: boolean
+          read_by_employee: boolean
+          request_id: string
+          sender_name: string | null
+          sender_role: string
+          sender_user_id: string | null
+        }
+        Insert: {
+          body: string
+          created_at?: string
+          id?: string
+          read_by_customer?: boolean
+          read_by_employee?: boolean
+          request_id: string
+          sender_name?: string | null
+          sender_role: string
+          sender_user_id?: string | null
+        }
+        Update: {
+          body?: string
+          created_at?: string
+          id?: string
+          read_by_customer?: boolean
+          read_by_employee?: boolean
+          request_id?: string
+          sender_name?: string | null
+          sender_role?: string
+          sender_user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "request_messages_request_id_fkey"
+            columns: ["request_id"]
+            isOneToOne: false
+            referencedRelation: "parking_requests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       request_notes: {
         Row: {
           author_id: string
@@ -605,6 +649,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      cleanup_old_request_messages: { Args: never; Returns: undefined }
       delete_email: {
         Args: { message_id: number; queue_name: string }
         Returns: boolean

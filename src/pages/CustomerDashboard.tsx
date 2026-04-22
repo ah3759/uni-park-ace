@@ -10,6 +10,7 @@ import { Clock, CreditCard, Crown, LogOut, History, Package, Plus } from "lucide
 import CustomerNewRequest from "@/components/CustomerNewRequest";
 import PickupRequestButton from "@/components/PickupRequestButton";
 import CarLogo from "@/components/CarLogo";
+import RequestChatPopover from "@/components/chat/RequestChatPopover";
 
 interface ParkingRequest {
   id: string;
@@ -322,12 +323,20 @@ const RequestCard = ({
         )}
         {userEmail && (
           <div className="mt-4 pt-4 border-t border-border/50">
-            <PickupRequestButton
-              parkingRequestId={request.id}
-              customerEmail={userEmail}
-              customerName={userName}
-              requestStatus={request.status}
-            />
+            <div className="flex flex-wrap items-center gap-2">
+              <PickupRequestButton
+                parkingRequestId={request.id}
+                customerEmail={userEmail}
+                customerName={userName}
+                requestStatus={request.status}
+              />
+              <RequestChatPopover
+                requestId={request.id}
+                viewerRole="customer"
+                viewerName={userName}
+                vehicleLabel={`${request.vehicle_color} ${request.vehicle_make} ${request.vehicle_model} • ${request.license_plate}`}
+              />
+            </div>
           </div>
         )}
       </CardContent>

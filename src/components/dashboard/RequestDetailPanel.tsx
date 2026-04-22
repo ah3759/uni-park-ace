@@ -8,6 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "@/components/ui/use-toast";
 import { X, Phone, Mail, MapPin, Clock, MessageSquare, Camera, ParkingSquare, FileText, User, CreditCard, CheckCircle2, DollarSign } from "lucide-react";
 import CarLogo from "@/components/CarLogo";
+import RequestChatPopover from "@/components/chat/RequestChatPopover";
 
 type RequestStatus = "pending" | "confirmed" | "in_progress" | "completed" | "cancelled";
 
@@ -187,6 +188,16 @@ const RequestDetailPanel = ({ request, userId, onClose, onStatusChange }: Props)
             <Badge variant="outline" className={statusConfig[request.status].className}>
               {statusConfig[request.status].label}
             </Badge>
+            <RequestChatPopover
+              requestId={request.id}
+              viewerRole="employee"
+              viewerName={`${request.first_name ? "Staff" : "Staff"}`}
+              viewerUserId={userId}
+              vehicleLabel={`${request.first_name} ${request.last_name} • ${request.vehicle_make} ${request.vehicle_model} (${request.license_plate})`}
+              size="sm"
+              variant="outline"
+              label="Chat"
+            />
             <Button variant="ghost" size="icon" onClick={onClose}>
               <X className="w-5 h-5" />
             </Button>
