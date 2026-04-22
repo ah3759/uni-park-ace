@@ -8,6 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "@/components/ui/use-toast";
 import { X, Phone, Mail, MapPin, Clock, MessageSquare, Camera, ParkingSquare, FileText, User, CreditCard, CheckCircle2, DollarSign } from "lucide-react";
 import CarLogo from "@/components/CarLogo";
+import RequestChatPopover from "@/components/chat/RequestChatPopover";
 
 type RequestStatus = "pending" | "confirmed" | "in_progress" | "completed" | "cancelled";
 
