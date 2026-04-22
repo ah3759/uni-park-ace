@@ -14,7 +14,7 @@ const CarLogo = ({ className, alt = "UNiVale car logo", ...rest }: Props) => (
     src={favicon}
     alt={alt}
     loading="lazy"
-    className={cn("inline-block object-contain", className)}
+    className={cn("inline-block object-cover scale-125", className)}
     {...rest}
   />
 );
