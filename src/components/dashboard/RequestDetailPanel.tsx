@@ -188,6 +188,16 @@ const RequestDetailPanel = ({ request, userId, onClose, onStatusChange }: Props)
             <Badge variant="outline" className={statusConfig[request.status].className}>
               {statusConfig[request.status].label}
             </Badge>
+            <RequestChatPopover
+              requestId={request.id}
+              viewerRole="employee"
+              viewerName={`${request.first_name ? "Staff" : "Staff"}`}
+              viewerUserId={userId}
+              vehicleLabel={`${request.first_name} ${request.last_name} • ${request.vehicle_make} ${request.vehicle_model} (${request.license_plate})`}
+              size="sm"
+              variant="outline"
+              label="Chat"
+            />
             <Button variant="ghost" size="icon" onClick={onClose}>
               <X className="w-5 h-5" />
             </Button>
