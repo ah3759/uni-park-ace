@@ -25,3 +25,6 @@ TEMPLATES['pickup-ready'] = pickupReady
 
 import { template as pickupReminder } from './pickup-reminder.tsx'
 TEMPLATES['pickup-reminder'] = pickupReminder
+
+import { template as chatMessage } from './chat-message.tsx'
+TEMPLATES['chat-message'] = chatMessage
