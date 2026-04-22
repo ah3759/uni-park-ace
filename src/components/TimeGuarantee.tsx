@@ -28,31 +28,31 @@ const TimeGuarantee = () => {
 
           {/* Stats Grid */}
           <div className="grid md:grid-cols-3 gap-6">
-            <div className="glass-card rounded-2xl p-8 border border-secondary/20">
+            <div className="bg-primary-foreground/10 backdrop-blur-md rounded-2xl p-8 border border-secondary/40 shadow-lg">
               <div className="w-16 h-16 mx-auto mb-4 accent-gradient rounded-2xl flex items-center justify-center shadow-glow">
                 <Clock className="w-8 h-8 text-accent-foreground" />
               </div>
               <p className="font-display text-4xl font-bold text-primary-foreground mb-2">3.2</p>
-              <p className="text-primary-foreground/60">Minutes Average Retrieval</p>
+              <p className="text-primary-foreground/85">Minutes Average Retrieval</p>
             </div>
-            <div className="glass-card rounded-2xl p-8 border border-secondary/20">
+            <div className="bg-primary-foreground/10 backdrop-blur-md rounded-2xl p-8 border border-secondary/40 shadow-lg">
               <div className="w-16 h-16 mx-auto mb-4 accent-gradient rounded-2xl flex items-center justify-center shadow-glow">
                 <Zap className="w-8 h-8 text-accent-foreground" />
               </div>
               <p className="font-display text-4xl font-bold text-primary-foreground mb-2">98.7%</p>
-              <p className="text-primary-foreground/60">On-Time Delivery Rate</p>
+              <p className="text-primary-foreground/85">On-Time Delivery Rate</p>
             </div>
-            <div className="glass-card rounded-2xl p-8 border border-secondary/20">
+            <div className="bg-primary-foreground/10 backdrop-blur-md rounded-2xl p-8 border border-secondary/40 shadow-lg">
               <div className="w-16 h-16 mx-auto mb-4 accent-gradient rounded-2xl flex items-center justify-center shadow-glow">
                 <Gift className="w-8 h-8 text-accent-foreground" />
               </div>
               <p className="font-display text-4xl font-bold text-primary-foreground mb-2">$0</p>
-              <p className="text-primary-foreground/60">Cost When We're Late</p>
+              <p className="text-primary-foreground/85">Cost When We're Late</p>
             </div>
           </div>
 
           {/* How It Works */}
-          <div className="mt-16 glass-card rounded-3xl p-8 border border-secondary/20 text-left">
+          <div className="mt-16 bg-primary-foreground/10 backdrop-blur-md rounded-3xl p-8 border border-secondary/40 shadow-lg text-left">
             <h3 className="font-display text-xl font-semibold text-primary-foreground mb-6 text-center">
               How Our Guarantee Works
             </h3>
@@ -64,9 +64,9 @@ const TimeGuarantee = () => {
                 { step: "04", title: "Late = Free", desc: "Miss deadline? Free next valet" },
               ].map((item) => (
                 <div key={item.step} className="relative">
-                  <span className="font-display text-4xl font-bold text-secondary/30">{item.step}</span>
+                  <span className="font-display text-4xl font-bold text-secondary">{item.step}</span>
                   <h4 className="font-display font-semibold text-primary-foreground mt-2">{item.title}</h4>
-                  <p className="text-sm text-primary-foreground/60 mt-1">{item.desc}</p>
+                  <p className="text-sm text-primary-foreground/85 mt-1">{item.desc}</p>
                 </div>
               ))}
             </div>
