@@ -6,11 +6,13 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Clock, CreditCard, Crown, LogOut, History, Package, Plus } from "lucide-react";
+import { Clock, CreditCard, Crown, LogOut, History, Package, Plus, Zap } from "lucide-react";
 import CustomerNewRequest from "@/components/CustomerNewRequest";
 import PickupRequestButton from "@/components/PickupRequestButton";
 import CarLogo from "@/components/CarLogo";
 import RequestChatPopover from "@/components/chat/RequestChatPopover";
+import QuickBookCard from "@/components/QuickBookCard";
+import { useState as useTabState } from "react";
 
 interface ParkingRequest {
   id: string;
@@ -46,6 +48,7 @@ const CustomerDashboard = () => {
   const navigate = useNavigate();
   const [requests, setRequests] = useState<ParkingRequest[]>([]);
   const [loadingData, setLoadingData] = useState(true);
+  const [activeTab, setActiveTab] = useState("quick");
 
   useEffect(() => {
     if (!loading && !user) {
@@ -150,13 +153,28 @@ const CustomerDashboard = () => {
         </div>
 
         {/* Tabs */}
-        <Tabs defaultValue="active" className="space-y-4">
-          <TabsList className="grid w-full grid-cols-4">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
+          <TabsList className="grid w-full grid-cols-5">
+            <TabsTrigger value="quick" className="gap-1">
+              <Zap className="w-3.5 h-3.5" /> Quick Book
+            </TabsTrigger>
             <TabsTrigger value="active">Active</TabsTrigger>
             <TabsTrigger value="new">New Request</TabsTrigger>
             <TabsTrigger value="history">History</TabsTrigger>
             <TabsTrigger value="subscription">Subscription</TabsTrigger>
           </TabsList>
+
+          {/* Quick Book */}
+          <TabsContent value="quick">
+            <QuickBookCard
+              userEmail={user?.email ?? ""}
+              onBooked={() => {
+                fetchRequests();
+                setActiveTab("active");
+              }}
+              onAddVehicle={() => setActiveTab("new")}
+            />
+          </TabsContent>
 
           {/* New Request */}
           <TabsContent value="new">
