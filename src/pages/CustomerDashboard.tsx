@@ -6,13 +6,12 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Clock, CreditCard, Crown, LogOut, History, Package, Plus, Zap } from "lucide-react";
+import { Clock, CreditCard, Crown, LogOut, History, Package, Zap } from "lucide-react";
 import CustomerNewRequest from "@/components/CustomerNewRequest";
 import PickupRequestButton from "@/components/PickupRequestButton";
 import CarLogo from "@/components/CarLogo";
 import RequestChatPopover from "@/components/chat/RequestChatPopover";
 import QuickBookCard from "@/components/QuickBookCard";
-import { useState as useTabState } from "react";
 
 interface ParkingRequest {
   id: string;
