@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "@/components/ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { Plus } from "lucide-react";
+import { Plus, Car, Trash2, Star } from "lucide-react";
 import VehicleSelector from "@/components/VehicleSelector";
 import { US_STATES } from "@/data/usStates";
 import CarLogo from "@/components/CarLogo";
@@ -19,6 +19,8 @@ interface CustomerNewRequestProps {
 
 const CustomerNewRequest = ({ userEmail, onSuccess }: CustomerNewRequestProps) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [savedVehicles, setSavedVehicles] = useState<any[]>([]);
+  const [pickedSavedId, setPickedSavedId] = useState<string>("");
   const [form, setForm] = useState({
     first_name: "",
     last_name: "",
@@ -36,6 +38,74 @@ const CustomerNewRequest = ({ userEmail, onSuccess }: CustomerNewRequestProps) =
 
   const update = (field: string, value: string) => {
     setForm((prev) => ({ ...prev, [field]: value }));
+  };
+
+  // Prefill from saved profile + load saved vehicles
+  useEffect(() => {
+    if (!userEmail) return;
+    (async () => {
+      const [{ data: profile }, { data: vehicles }] = await Promise.all([
+        supabase
+          .from("customer_profiles")
+          .select("*")
+          .eq("customer_email", userEmail)
+          .maybeSingle(),
+        supabase
+          .from("customer_vehicles")
+          .select("*")
+          .eq("customer_email", userEmail)
+          .order("is_default", { ascending: false })
+          .order("created_at", { ascending: false }),
+      ]);
+      if (profile) {
+        setForm((prev) => ({
+          ...prev,
+          first_name: profile.first_name || prev.first_name,
+          last_name: profile.last_name || prev.last_name,
+          phone: profile.phone || prev.phone,
+          pickup_location: profile.default_pickup_location || prev.pickup_location,
+        }));
+      }
+      setSavedVehicles(vehicles || []);
+    })();
+  }, [userEmail]);
+
+  const applySavedVehicle = (id: string) => {
+    setPickedSavedId(id);
+    if (id === "__new__") {
+      setForm((p) => ({
+        ...p,
+        vehicle_make: "",
+        vehicle_model: "",
+        vehicle_year: "",
+        vehicle_color: "",
+        license_plate: "",
+        license_plate_state: "",
+      }));
+      return;
+    }
+    const v = savedVehicles.find((x) => x.id === id);
+    if (!v) return;
+    setForm((p) => ({
+      ...p,
+      vehicle_make: v.vehicle_make || "",
+      vehicle_model: v.vehicle_model || "",
+      vehicle_year: v.vehicle_year || "",
+      vehicle_color: v.vehicle_color || "",
+      license_plate: v.license_plate || "",
+      license_plate_state: v.license_plate_state || "",
+    }));
+  };
+
+  const deleteSavedVehicle = async (id: string) => {
+    const { error } = await supabase.from("customer_vehicles").delete().eq("id", id);
+    if (error) {
+      toast({ title: "Couldn't remove vehicle", description: error.message, variant: "destructive" });
+      return;
+    }
+    setSavedVehicles((prev) => prev.filter((v) => v.id !== id));
+    if (pickedSavedId === id) setPickedSavedId("");
+    toast({ title: "Vehicle removed" });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -64,20 +134,50 @@ const CustomerNewRequest = ({ userEmail, onSuccess }: CustomerNewRequestProps) =
       special_instructions: form.special_instructions || null,
     });
 
-    setIsSubmitting(false);
-
     if (error) {
+      setIsSubmitting(false);
       toast({ title: "Failed to submit request", description: error.message, variant: "destructive" });
-    } else {
-      toast({ title: "Request submitted!", description: "Your valet request has been placed." });
-      setForm({
-        first_name: "", last_name: "", phone: "",
-        vehicle_make: "", vehicle_model: "", vehicle_year: "", vehicle_color: "",
-        license_plate: "", license_plate_state: "", pickup_location: "", service_type: "single",
-        special_instructions: "",
-      });
-      onSuccess();
+      return;
     }
+
+    // Save profile (upsert) + vehicle for future quick-book
+    await supabase.from("customer_profiles").upsert(
+      {
+        customer_email: userEmail,
+        first_name: form.first_name,
+        last_name: form.last_name,
+        phone: form.phone,
+        default_pickup_location: form.pickup_location,
+      },
+      { onConflict: "customer_email" }
+    );
+
+    // Only insert a saved vehicle if not already saved (unique on email + license_plate)
+    const exists = savedVehicles.some(
+      (v) => v.license_plate?.toLowerCase() === form.license_plate.toLowerCase()
+    );
+    if (!exists) {
+      const { data: newV } = await supabase
+        .from("customer_vehicles")
+        .insert({
+          customer_email: userEmail,
+          vehicle_make: form.vehicle_make,
+          vehicle_model: form.vehicle_model,
+          vehicle_year: form.vehicle_year || null,
+          vehicle_color: form.vehicle_color,
+          license_plate: form.license_plate,
+          license_plate_state: form.license_plate_state,
+          is_default: savedVehicles.length === 0,
+        })
+        .select()
+        .single();
+      if (newV) setSavedVehicles((prev) => [newV, ...prev]);
+    }
+
+    setIsSubmitting(false);
+    toast({ title: "Request submitted!", description: "Vehicle saved for one-tap booking next time." });
+    setForm((p) => ({ ...p, special_instructions: "" }));
+    onSuccess();
   };
 
   return (
@@ -87,10 +187,67 @@ const CustomerNewRequest = ({ userEmail, onSuccess }: CustomerNewRequestProps) =
           <Plus className="w-5 h-5 text-secondary" />
           New Valet Request
         </CardTitle>
-        <CardDescription>Add a vehicle and request valet service</CardDescription>
+        <CardDescription>
+          {savedVehicles.length > 0
+            ? "Pick a saved vehicle, or add a new one. Your name & phone are remembered."
+            : "First time? Fill this out — we'll remember your details for next time."}
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Saved vehicles picker */}
+          {savedVehicles.length > 0 && (
+            <div className="space-y-2 rounded-lg border border-border/60 bg-muted/30 p-3">
+              <div className="flex items-center gap-2 text-sm font-medium text-foreground">
+                <Car className="w-4 h-4 text-secondary" />
+                Use a saved vehicle
+              </div>
+              <div className="grid sm:grid-cols-2 gap-2">
+                {savedVehicles.map((v) => (
+                  <div
+                    key={v.id}
+                    className={`rounded-md border p-2 text-xs flex items-center justify-between gap-2 cursor-pointer transition-colors ${
+                      pickedSavedId === v.id
+                        ? "border-secondary bg-secondary/10"
+                        : "border-border bg-background/60 hover:border-secondary/40"
+                    }`}
+                    onClick={() => applySavedVehicle(v.id)}
+                  >
+                    <div className="min-w-0">
+                      <div className="font-medium text-foreground truncate flex items-center gap-1">
+                        {v.is_default && <Star className="w-3 h-3 text-secondary fill-secondary" />}
+                        {v.vehicle_color} {v.vehicle_make} {v.vehicle_model}
+                      </div>
+                      <div className="text-muted-foreground">{v.license_plate}</div>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        deleteSavedVehicle(v.id);
+                      }}
+                      className="text-muted-foreground hover:text-destructive p-1"
+                      aria-label="Remove vehicle"
+                    >
+                      <Trash2 className="w-3 h-3" />
+                    </button>
+                  </div>
+                ))}
+                <button
+                  type="button"
+                  onClick={() => applySavedVehicle("__new__")}
+                  className={`rounded-md border border-dashed p-2 text-xs flex items-center justify-center gap-1 transition-colors ${
+                    pickedSavedId === "__new__"
+                      ? "border-secondary bg-secondary/10 text-secondary"
+                      : "border-border text-muted-foreground hover:border-secondary/40 hover:text-foreground"
+                  }`}
+                >
+                  <Plus className="w-3 h-3" /> Add a new vehicle
+                </button>
+              </div>
+            </div>
+          )}
+
           {/* Personal Info */}
           <div>
             <h4 className="text-sm font-medium text-foreground mb-3">Personal Information</h4>
