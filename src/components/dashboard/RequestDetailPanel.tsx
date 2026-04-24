@@ -9,6 +9,7 @@ import { toast } from "@/components/ui/use-toast";
 import { X, Phone, Mail, MapPin, Clock, MessageSquare, Camera, ParkingSquare, FileText, User, CreditCard, CheckCircle2, DollarSign } from "lucide-react";
 import CarLogo from "@/components/CarLogo";
 import RequestChatPopover from "@/components/chat/RequestChatPopover";
+import MembershipPanel from "@/components/dashboard/MembershipPanel";
 
 type RequestStatus = "pending" | "confirmed" | "in_progress" | "completed" | "cancelled";
 
@@ -299,6 +300,12 @@ const RequestDetailPanel = ({ request, userId, onClose, onStatusChange }: Props)
               <h3 className="text-xs font-medium text-muted-foreground uppercase tracking-wider flex items-center gap-1.5">
                 <DollarSign className="w-3.5 h-3.5" /> Complete & Charge
               </h3>
+              {/* Membership recognition + usage tracking */}
+              <MembershipPanel
+                requestId={request.id}
+                customerEmail={request.email}
+                customerFirstName={request.first_name}
+              />
               <p className="text-xs text-muted-foreground">
                 Choose how to collect payment from {request.first_name}.
               </p>
