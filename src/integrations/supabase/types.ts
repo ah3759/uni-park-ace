@@ -68,6 +68,84 @@ export type Database = {
         }
         Relationships: []
       }
+      customer_profiles: {
+        Row: {
+          created_at: string
+          customer_email: string
+          default_pickup_location: string | null
+          first_name: string | null
+          id: string
+          last_name: string | null
+          phone: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          customer_email: string
+          default_pickup_location?: string | null
+          first_name?: string | null
+          id?: string
+          last_name?: string | null
+          phone?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          customer_email?: string
+          default_pickup_location?: string | null
+          first_name?: string | null
+          id?: string
+          last_name?: string | null
+          phone?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      customer_vehicles: {
+        Row: {
+          created_at: string
+          customer_email: string
+          id: string
+          is_default: boolean
+          license_plate: string
+          license_plate_state: string | null
+          nickname: string | null
+          updated_at: string
+          vehicle_color: string
+          vehicle_make: string
+          vehicle_model: string
+          vehicle_year: string | null
+        }
+        Insert: {
+          created_at?: string
+          customer_email: string
+          id?: string
+          is_default?: boolean
+          license_plate: string
+          license_plate_state?: string | null
+          nickname?: string | null
+          updated_at?: string
+          vehicle_color: string
+          vehicle_make: string
+          vehicle_model: string
+          vehicle_year?: string | null
+        }
+        Update: {
+          created_at?: string
+          customer_email?: string
+          id?: string
+          is_default?: boolean
+          license_plate?: string
+          license_plate_state?: string | null
+          nickname?: string | null
+          updated_at?: string
+          vehicle_color?: string
+          vehicle_make?: string
+          vehicle_model?: string
+          vehicle_year?: string | null
+        }
+        Relationships: []
+      }
       email_send_log: {
         Row: {
           created_at: string
