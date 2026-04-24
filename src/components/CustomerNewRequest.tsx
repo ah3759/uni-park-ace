@@ -11,6 +11,7 @@ import { Plus, Car, Trash2, Star } from "lucide-react";
 import VehicleSelector from "@/components/VehicleSelector";
 import { US_STATES } from "@/data/usStates";
 import CarLogo from "@/components/CarLogo";
+import { LOCATION_LABELS } from "@/components/schedule/scheduleConstants";
 
 interface CustomerNewRequestProps {
   userEmail: string;
@@ -309,11 +310,9 @@ const CustomerNewRequest = ({ userEmail, onSuccess }: CustomerNewRequestProps) =
               <Select value={form.pickup_location} onValueChange={(v) => update("pickup_location", v)}>
                 <SelectTrigger><SelectValue placeholder="Select location" /></SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="main_entrance">Main Entrance</SelectItem>
-                  <SelectItem value="north_gate">North Gate</SelectItem>
-                  <SelectItem value="south_parking">South Parking</SelectItem>
-                  <SelectItem value="east_wing">East Wing</SelectItem>
-                  <SelectItem value="west_plaza">West Plaza</SelectItem>
+                  {Object.entries(LOCATION_LABELS).map(([value, label]) => (
+                    <SelectItem key={value} value={value}>{label}</SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>
