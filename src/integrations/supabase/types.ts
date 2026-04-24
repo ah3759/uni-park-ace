@@ -155,6 +155,54 @@ export type Database = {
         }
         Relationships: []
       }
+      membership_uses: {
+        Row: {
+          created_at: string
+          customer_email: string
+          id: string
+          is_guest_pass: boolean
+          parking_request_id: string
+          period_start: string
+          plan_tier: string
+          recorded_by: string | null
+        }
+        Insert: {
+          created_at?: string
+          customer_email: string
+          id?: string
+          is_guest_pass?: boolean
+          parking_request_id: string
+          period_start: string
+          plan_tier: string
+          recorded_by?: string | null
+        }
+        Update: {
+          created_at?: string
+          customer_email?: string
+          id?: string
+          is_guest_pass?: boolean
+          parking_request_id?: string
+          period_start?: string
+          plan_tier?: string
+          recorded_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "membership_uses_parking_request_id_fkey"
+            columns: ["parking_request_id"]
+            isOneToOne: false
+            referencedRelation: "parking_requests"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "membership_uses_recorded_by_fkey"
+            columns: ["recorded_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       parking_requests: {
         Row: {
           assigned_employee_id: string | null
