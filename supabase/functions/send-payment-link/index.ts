@@ -52,9 +52,9 @@ serve(async (req) => {
     // Send email with payment link
     const { error: emailErr } = await supabase.functions.invoke("send-transactional-email", {
       body: {
-        template: "status-update",
-        to: pr.email,
-        data: {
+        templateName: "status-update",
+        recipientEmail: pr.email,
+        templateData: {
           firstName: pr.first_name,
           status: "Payment Requested",
           message: `Thank you for using UNiVale! Your vehicle (${pr.vehicle_make} ${pr.vehicle_model} • ${pr.license_plate}) is ready. Please complete your payment using the secure link below.`,
